@@ -1,0 +1,10 @@
+#ifndef RATE_LIMIT_TYPE_HPP
+#define RATE_LIMIT_TYPE_HPP
+
+enum class RateLimitType {
+    TOKEN_BUCKET,
+    FIXED_WINDOW,
+    SLIDING_WINDOW_LOG
+};
+
+#endif // RATE_LIMIT_TYPE_HPP

@@ -1,0 +1,9 @@
+#ifndef PRICING_STRATEGY_TYPE_HPP
+#define PRICING_STRATEGY_TYPE_HPP
+
+enum class PricingStrategyType {
+    TIME_BASED,
+    EVENT_BASED
+};
+
+#endif // PRICING_STRATEGY_TYPE_HPP
