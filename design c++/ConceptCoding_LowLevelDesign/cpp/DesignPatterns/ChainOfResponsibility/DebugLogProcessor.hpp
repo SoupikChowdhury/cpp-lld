@@ -7,12 +7,12 @@
  */
 class DebugLogProcessor : public LogProcessor {
 public:
-    explicit DebugLogProcessor(std::shared_ptr&lt;LogProcessor&gt; next = nullptr)
+    explicit DebugLogProcessor(std::shared_ptr<LogProcessor> next = nullptr)
         : LogProcessor(next) {}
 
-    void log(int logLevel, const std::string&amp; message) override {
+    void log(int logLevel, const std::string& message) override {
         if (logLevel == DEBUG) {
-            std::cout &lt;&lt; "DEBUG: " &lt;&lt; message &lt;&lt; std::endl;
+            std::cout << "DEBUG: " << message << std::endl;
         } else {
             LogProcessor::log(logLevel, message);
         }

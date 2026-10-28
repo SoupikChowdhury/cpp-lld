@@ -9,8 +9,6 @@
 #include "repository/ATMRepository.hpp"
 #include "service/ATMMachine.hpp"
 
-// Include implementation file
-#include "ATMImplementation.cpp"
 
 int main() {
     std::cout << "=== ATM Machine Demo ===" << std::endl;

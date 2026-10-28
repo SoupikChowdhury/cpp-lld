@@ -1,6 +1,7 @@
 #pragma once
 #include "UserBankAccount.hpp"
-#include &lt;memory&gt;
+#include <memory>
+#include <string>
 
 /**
  * ATM Card - Links to user's bank account
@@ -12,7 +13,7 @@ private:
     int expiryDate = 0;
     std::string holderName;
     static const int PIN_NUMBER = 112211;
-    std::shared_ptr&lt;UserBankAccount&gt; bankAccount;
+    std::shared_ptr<UserBankAccount> bankAccount;
 
 public:
     bool isCorrectPINEntered(int pin) const {
@@ -20,16 +21,16 @@ public:
     }
 
     int getBankBalance() const {
-        return bankAccount ? bankAccount-&gt;balance : 0;
+        return bankAccount ? bankAccount->balance : 0;
     }
 
     void deductBankBalance(int amount) {
         if (bankAccount) {
-            bankAccount-&gt;withdrawBalance(amount);
+            bankAccount->withdrawBalance(amount);
         }
     }
 
-    void setBankAccount(std::shared_ptr&lt;UserBankAccount&gt; account) {
+    void setBankAccount(std::shared_ptr<UserBankAccount> account) {
         bankAccount = account;
     }
 };

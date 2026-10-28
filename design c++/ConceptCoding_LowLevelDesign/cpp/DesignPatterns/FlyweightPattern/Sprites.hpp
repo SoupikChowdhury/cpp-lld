@@ -1,5 +1,5 @@
 #pragma once
-#include &lt;string&gt;
+#include <string>
 
 /**
  * Represents heavy graphics data (sprites) that is shared.

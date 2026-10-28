@@ -1,5 +1,5 @@
 #pragma once
-#include &lt;string&gt;
+#include <string>
 
 /**
  * Item types available in the vending machine

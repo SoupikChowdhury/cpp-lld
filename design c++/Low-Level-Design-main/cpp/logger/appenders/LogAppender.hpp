@@ -2,6 +2,7 @@
 #define LOG_APPENDER_HPP
 
 #include <string>
+#include <memory>
 #include "../formatter/LogFormatter.hpp"
 #include "../model/LogMessage.hpp"
 

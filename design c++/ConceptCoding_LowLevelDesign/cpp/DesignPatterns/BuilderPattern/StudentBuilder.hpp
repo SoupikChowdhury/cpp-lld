@@ -1,6 +1,6 @@
 #pragma once
 #include "Student.hpp"
-#include &lt;memory&gt;
+#include <memory>
 
 /**
  * Builder Pattern - Abstract Builder
@@ -14,46 +14,46 @@ public:
     std::string name;
     std::string fatherName;
     std::string motherName;
-    std::vector&lt;std::string&gt; subjects;
+    std::vector<std::string> subjects;
 
     virtual ~StudentBuilder() = default;
 
-    StudentBuilder&amp; setRollNumber(int roll) {
+    StudentBuilder& setRollNumber(int roll) {
         rollNumber = roll;
         return *this;
     }
 
-    StudentBuilder&amp; setAge(int a) {
+    StudentBuilder& setAge(int a) {
         age = a;
         return *this;
     }
 
-    StudentBuilder&amp; setName(const std::string&amp; n) {
+    StudentBuilder& setName(const std::string& n) {
         name = n;
         return *this;
     }
 
-    StudentBuilder&amp; setFatherName(const std::string&amp; fn) {
+    StudentBuilder& setFatherName(const std::string& fn) {
         fatherName = fn;
         return *this;
     }
 
-    StudentBuilder&amp; setMotherName(const std::string&amp; mn) {
+    StudentBuilder& setMotherName(const std::string& mn) {
         motherName = mn;
         return *this;
     }
 
     // Abstract method - concrete builders implement this
-    virtual StudentBuilder&amp; setSubjects() = 0;
+    virtual StudentBuilder& setSubjects() = 0;
 
-    std::unique_ptr&lt;Student&gt; build() {
-        auto student = std::make_unique&lt;Student&gt;();
-        student-&gt;rollNumber = rollNumber;
-        student-&gt;age = age;
-        student-&gt;name = name;
-        student-&gt;fatherName = fatherName;
-        student-&gt;motherName = motherName;
-        student-&gt;subjects = subjects;
+    std::unique_ptr<Student> build() {
+        auto student = std::make_unique<Student>();
+        student->rollNumber = rollNumber;
+        student->age = age;
+        student->name = name;
+        student->fatherName = fatherName;
+        student->motherName = motherName;
+        student->subjects = subjects;
         return student;
     }
 };

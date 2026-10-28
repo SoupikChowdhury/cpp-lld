@@ -1,6 +1,6 @@
 #pragma once
-#include &lt;iostream&gt;
-#include &lt;string&gt;
+#include <iostream>
+#include <string>
 
 /**
  * Composite Pattern - Component Interface

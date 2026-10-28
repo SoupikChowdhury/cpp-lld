@@ -1,9 +1,9 @@
 #pragma once
-#include "State.hpp"
-#include "../Coin.hpp"
-#include "../Inventory.hpp"
-#include &lt;vector&gt;
-#include &lt;memory&gt;
+#include "States/State.hpp"
+#include "Coin.hpp"
+#include "Inventory.hpp"
+#include <vector>
+#include <memory>
 
 // Forward declarations for state implementations
 class IdleState;
@@ -18,20 +18,20 @@ class DispenseState;
  */
 class VendingMachine {
 private:
-    std::shared_ptr&lt;State&gt; currentState;
-    std::unique_ptr&lt;Inventory&gt; inventory;
-    std::vector&lt;Coin&gt; coinList;
+    std::shared_ptr<State> currentState;
+    std::unique_ptr<Inventory> inventory;
+    std::vector<Coin> coinList;
 
 public:
     VendingMachine();  // Implementation in VendingMachine.cpp
 
-    std::shared_ptr&lt;State&gt; getState() const { return currentState; }
-    void setState(std::shared_ptr&lt;State&gt; state) { currentState = state; }
+    std::shared_ptr<State> getState() const { return currentState; }
+    void setState(std::shared_ptr<State> state) { currentState = state; }
 
     Inventory* getInventory() { return inventory.get(); }
 
-    std::vector&lt;Coin&gt;&amp; getCoinList() { return coinList; }
-    void setCoinList(const std::vector&lt;Coin&gt;&amp; coins) { coinList = coins; }
+    std::vector<Coin>& getCoinList() { return coinList; }
+    void setCoinList(const std::vector<Coin>& coins) { coinList = coins; }
     void clearCoinList() { coinList.clear(); }
     void addCoin(Coin coin) { coinList.push_back(coin); }
 };

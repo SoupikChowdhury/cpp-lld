@@ -6,7 +6,7 @@
  */
 class OneHundredWithdrawProcessor : public CashWithdrawProcessor {
 public:
-    explicit OneHundredWithdrawProcessor(std::shared_ptr&lt;CashWithdrawProcessor&gt; next = nullptr)
+    explicit OneHundredWithdrawProcessor(std::shared_ptr<CashWithdrawProcessor> next = nullptr)
         : CashWithdrawProcessor(next) {}
 
     void withdraw(ATM* atm, int remainingAmount) override;

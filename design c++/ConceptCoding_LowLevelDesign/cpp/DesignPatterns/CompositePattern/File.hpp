@@ -11,9 +11,9 @@ private:
     std::string fileName;
 
 public:
-    explicit File(const std::string&amp; name) : fileName(name) {}
+    explicit File(const std::string& name) : fileName(name) {}
 
     void ls() override {
-        std::cout &lt;&lt; "File: " &lt;&lt; fileName &lt;&lt; std::endl;
+        std::cout << "File: " << fileName << std::endl;
     }
 };

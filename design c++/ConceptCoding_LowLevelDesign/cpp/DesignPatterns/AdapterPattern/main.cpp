@@ -1,7 +1,7 @@
 #include "WeightMachineAdapterImpl.hpp"
 #include "WeightMachineForBabies.hpp"
-#include &lt;iostream&gt;
-#include &lt;memory&gt;
+#include <iostream>
+#include <memory>
 
 /**
  * Adapter Pattern Demo
@@ -11,12 +11,12 @@
  */
 int main() {
     // Create adapter with the adaptee (WeightMachineForBabies)
-    auto adapter = std::make_unique&lt;WeightMachineAdapterImpl&gt;(
-        std::make_unique&lt;WeightMachineForBabies&gt;()
+    auto adapter = std::make_unique<WeightMachineAdapterImpl>(
+        std::make_unique<WeightMachineForBabies>()
     );
 
     // Client uses Kg interface
-    std::cout &lt;&lt; "Weight in Kg: " &lt;&lt; adapter-&gt;getWeightInKg() &lt;&lt; std::endl;
+    std::cout << "Weight in Kg: " << adapter->getWeightInKg() << std::endl;
 
     return 0;
 }

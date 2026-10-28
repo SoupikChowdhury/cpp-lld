@@ -11,5 +11,5 @@ enum class Coin {
 };
 
 inline int getCoinValue(Coin coin) {
-    return static_cast&lt;int&gt;(coin);
+    return static_cast<int>(coin);
 }

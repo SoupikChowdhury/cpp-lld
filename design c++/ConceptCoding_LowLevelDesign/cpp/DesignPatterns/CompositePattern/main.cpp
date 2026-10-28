@@ -1,6 +1,6 @@
 #include "File.hpp"
 #include "Directory.hpp"
-#include &lt;memory&gt;
+#include <memory>
 
 /**
  * Composite Pattern Demo
@@ -9,31 +9,31 @@
  */
 int main() {
     // Create movie directory
-    auto movieDirectory = std::make_shared&lt;Directory&gt;("Movies");
+    auto movieDirectory = std::make_shared<Directory>("Movies");
 
     // Add a file directly to movies
-    auto border = std::make_shared&lt;File&gt;("Border.mp4");
-    movieDirectory-&gt;add(border);
+    auto border = std::make_shared<File>("Border.mp4");
+    movieDirectory->add(border);
 
     // Create subdirectory for comedy movies
-    auto comedyMovieDirectory = std::make_shared&lt;Directory&gt;("Comedy Movies");
-    auto hulchul = std::make_shared&lt;File&gt;("Hulchul.mp4");
-    auto hera_pheri = std::make_shared&lt;File&gt;("Hera_Pheri.mp4");
-    comedyMovieDirectory-&gt;add(hulchul);
-    comedyMovieDirectory-&gt;add(hera_pheri);
+    auto comedyMovieDirectory = std::make_shared<Directory>("Comedy Movies");
+    auto hulchul = std::make_shared<File>("Hulchul.mp4");
+    auto hera_pheri = std::make_shared<File>("Hera_Pheri.mp4");
+    comedyMovieDirectory->add(hulchul);
+    comedyMovieDirectory->add(hera_pheri);
 
     // Add comedy directory to movies
-    movieDirectory-&gt;add(comedyMovieDirectory);
+    movieDirectory->add(comedyMovieDirectory);
 
     // Create action subdirectory
-    auto actionDirectory = std::make_shared&lt;Directory&gt;("Action Movies");
-    auto dhoom = std::make_shared&lt;File&gt;("Dhoom.mp4");
-    actionDirectory-&gt;add(dhoom);
-    movieDirectory-&gt;add(actionDirectory);
+    auto actionDirectory = std::make_shared<Directory>("Action Movies");
+    auto dhoom = std::make_shared<File>("Dhoom.mp4");
+    actionDirectory->add(dhoom);
+    movieDirectory->add(actionDirectory);
 
     // List all - treats composite and leaf uniformly
-    std::cout &lt;&lt; "=== File System Structure ===" &lt;&lt; std::endl;
-    movieDirectory-&gt;ls();
+    std::cout << "=== File System Structure ===" << std::endl;
+    movieDirectory->ls();
 
     return 0;
 }

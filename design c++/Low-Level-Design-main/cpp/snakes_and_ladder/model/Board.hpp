@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 #include "Cell.hpp"
 #include "Obstacle.hpp"
 

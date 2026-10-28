@@ -2,7 +2,7 @@
 #include "StudentBuilder.hpp"
 #include "EngineeringStudentBuilder.hpp"
 #include "MBAStudentBuilder.hpp"
-#include &lt;memory&gt;
+#include <memory>
 
 /**
  * Director - Controls the building process.
@@ -10,38 +10,38 @@
  */
 class Director {
 private:
-    std::shared_ptr&lt;StudentBuilder&gt; studentBuilder;
+    std::shared_ptr<StudentBuilder> studentBuilder;
 
 public:
-    explicit Director(std::shared_ptr&lt;StudentBuilder&gt; builder)
+    explicit Director(std::shared_ptr<StudentBuilder> builder)
         : studentBuilder(builder) {}
 
-    std::unique_ptr&lt;Student&gt; createStudent() {
+    std::unique_ptr<Student> createStudent() {
         // Check type and build accordingly
-        if (dynamic_cast&lt;EngineeringStudentBuilder*&gt;(studentBuilder.get())) {
+        if (dynamic_cast<EngineeringStudentBuilder*>(studentBuilder.get())) {
             return createEngineeringStudent();
-        } else if (dynamic_cast&lt;MBAStudentBuilder*&gt;(studentBuilder.get())) {
+        } else if (dynamic_cast<MBAStudentBuilder*>(studentBuilder.get())) {
             return createMBAStudent();
         }
         return nullptr;
     }
 
 private:
-    std::unique_ptr&lt;Student&gt; createEngineeringStudent() {
-        studentBuilder-&gt;setRollNumber(1)
+    std::unique_ptr<Student> createEngineeringStudent() {
+        studentBuilder->setRollNumber(1)
                       .setAge(22)
                       .setName("John")
                       .setSubjects();
-        return studentBuilder-&gt;build();
+        return studentBuilder->build();
     }
 
-    std::unique_ptr&lt;Student&gt; createMBAStudent() {
-        studentBuilder-&gt;setRollNumber(2)
+    std::unique_ptr<Student> createMBAStudent() {
+        studentBuilder->setRollNumber(2)
                       .setAge(24)
                       .setName("Jane")
                       .setFatherName("Father Name")
                       .setMotherName("Mother Name")
                       .setSubjects();
-        return studentBuilder-&gt;build();
+        return studentBuilder->build();
     }
 };

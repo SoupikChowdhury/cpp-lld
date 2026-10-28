@@ -10,14 +10,14 @@
  */
 int main() {
     // Build the chain from end to beginning
-    auto errorProcessor = std::make_shared&lt;ErrorLogProcessor&gt;(nullptr);
-    auto debugProcessor = std::make_shared&lt;DebugLogProcessor&gt;(errorProcessor);
-    auto infoProcessor = std::make_shared&lt;InfoLogProcessor&gt;(debugProcessor);
+    auto errorProcessor = std::make_shared<ErrorLogProcessor>(nullptr);
+    auto debugProcessor = std::make_shared<DebugLogProcessor>(errorProcessor);
+    auto infoProcessor = std::make_shared<InfoLogProcessor>(debugProcessor);
 
     // Test the chain with different log levels
-    infoProcessor-&gt;log(LogProcessor::ERROR, "exception happens");
-    infoProcessor-&gt;log(LogProcessor::DEBUG, "need to debug this");
-    infoProcessor-&gt;log(LogProcessor::INFO, "just for info");
+    infoProcessor->log(LogProcessor::ERROR, "exception happens");
+    infoProcessor->log(LogProcessor::DEBUG, "need to debug this");
+    infoProcessor->log(LogProcessor::INFO, "just for info");
 
     return 0;
 }

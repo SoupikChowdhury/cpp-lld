@@ -1,7 +1,7 @@
 #pragma once
-#include &lt;iostream&gt;
-#include &lt;string&gt;
-#include &lt;memory&gt;
+#include <iostream>
+#include <string>
+#include <memory>
 
 /**
  * Chain of Responsibility Design Pattern
@@ -17,17 +17,17 @@ public:
     static const int ERROR = 3;
 
 protected:
-    std::shared_ptr&lt;LogProcessor&gt; nextLogProcessor;
+    std::shared_ptr<LogProcessor> nextLogProcessor;
 
 public:
-    explicit LogProcessor(std::shared_ptr&lt;LogProcessor&gt; next = nullptr)
+    explicit LogProcessor(std::shared_ptr<LogProcessor> next = nullptr)
         : nextLogProcessor(next) {}
 
     virtual ~LogProcessor() = default;
 
-    virtual void log(int logLevel, const std::string&amp; message) {
+    virtual void log(int logLevel, const std::string& message) {
         if (nextLogProcessor != nullptr) {
-            nextLogProcessor-&gt;log(logLevel, message);
+            nextLogProcessor->log(logLevel, message);
         }
     }
 };

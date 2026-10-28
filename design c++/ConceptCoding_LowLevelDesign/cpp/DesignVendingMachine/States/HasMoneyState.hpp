@@ -1,8 +1,8 @@
 #pragma once
 #include "State.hpp"
 #include "../VendingMachine.hpp"
-#include &lt;iostream&gt;
-#include &lt;stdexcept&gt;
+#include <iostream>
+#include <stdexcept>
 
 // Forward declaration
 class SelectionState;
@@ -15,22 +15,22 @@ class SelectionState;
 class HasMoneyState : public State {
 public:
     HasMoneyState() {
-        std::cout &lt;&lt; "Currently Vending machine is in HasMoneyState" &lt;&lt; std::endl;
+        std::cout << "Currently Vending machine is in HasMoneyState" << std::endl;
     }
 
-    void clickOnInsertCoinButton(VendingMachine&amp; machine) override {
+    void clickOnInsertCoinButton(VendingMachine& machine) override {
         // Already in money insertion mode
         return;
     }
 
-    void clickOnStartProductSelectionButton(VendingMachine&amp; machine) override;
+    void clickOnStartProductSelectionButton(VendingMachine& machine) override;
 
-    void insertCoin(VendingMachine&amp; machine, Coin coin) override {
-        std::cout &lt;&lt; "Accepted the coin: " &lt;&lt; getCoinValue(coin) &lt;&lt; std::endl;
+    void insertCoin(VendingMachine& machine, Coin coin) override {
+        std::cout << "Accepted the coin: " << getCoinValue(coin) << std::endl;
         machine.addCoin(coin);
     }
 
-    void chooseProduct(VendingMachine&amp; machine, int codeNumber) override {
+    void chooseProduct(VendingMachine& machine, int codeNumber) override {
         throw std::runtime_error("You need to click on start product selection button first");
     }
 
@@ -38,13 +38,13 @@ public:
         throw std::runtime_error("You cannot get change in hasMoney state");
     }
 
-    std::shared_ptr&lt;Item&gt; dispenseProduct(VendingMachine&amp; machine, int codeNumber) override {
+    std::shared_ptr<Item> dispenseProduct(VendingMachine& machine, int codeNumber) override {
         throw std::runtime_error("Product cannot be dispensed in hasMoney state");
     }
 
-    std::vector&lt;Coin&gt; refundFullMoney(VendingMachine&amp; machine) override;
+    std::vector<Coin> refundFullMoney(VendingMachine& machine) override;
 
-    void updateInventory(VendingMachine&amp; machine, std::shared_ptr&lt;Item&gt; item, int codeNumber) override {
+    void updateInventory(VendingMachine& machine, std::shared_ptr<Item> item, int codeNumber) override {
         throw std::runtime_error("You cannot update inventory in hasMoney state");
     }
 };

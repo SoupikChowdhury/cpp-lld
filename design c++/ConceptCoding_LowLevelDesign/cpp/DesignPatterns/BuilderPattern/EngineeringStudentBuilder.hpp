@@ -7,7 +7,7 @@
  */
 class EngineeringStudentBuilder : public StudentBuilder {
 public:
-    StudentBuilder&amp; setSubjects() override {
+    StudentBuilder& setSubjects() override {
         subjects.clear();
         subjects.push_back("DSA");
         subjects.push_back("OS");

@@ -1,7 +1,7 @@
 #pragma once
 #include "States/ATMState.hpp"
-#include &lt;memory&gt;
-#include &lt;iostream&gt;
+#include <memory>
+#include <iostream>
 
 /**
  * ATM Machine - Singleton Pattern + State Pattern Context
@@ -9,7 +9,7 @@
 class ATM {
 private:
     static ATM* instance;
-    std::shared_ptr&lt;ATMState&gt; currentState;
+    std::shared_ptr<ATMState> currentState;
     int atmBalance = 0;
     int noOfTwoThousandNotes = 0;
     int noOfFiveHundredNotes = 0;
@@ -19,16 +19,16 @@ private:
 
 public:
     // Delete copy constructor and assignment
-    ATM(const ATM&amp;) = delete;
-    ATM&amp; operator=(const ATM&amp;) = delete;
+    ATM(const ATM&) = delete;
+    ATM& operator=(const ATM&) = delete;
 
     static ATM* getATMObject();
 
-    void setCurrentATMState(std::shared_ptr&lt;ATMState&gt; state) {
+    void setCurrentATMState(std::shared_ptr<ATMState> state) {
         currentState = state;
     }
 
-    std::shared_ptr&lt;ATMState&gt; getCurrentATMState() const {
+    std::shared_ptr<ATMState> getCurrentATMState() const {
         return currentState;
     }
 
@@ -51,9 +51,9 @@ public:
     void deductOneHundredNotes(int n) { noOfOneHundredNotes -= n; }
 
     void printCurrentATMStatus() const {
-        std::cout &lt;&lt; "ATM Balance: " &lt;&lt; atmBalance &lt;&lt; std::endl;
-        std::cout &lt;&lt; "2000 Notes: " &lt;&lt; noOfTwoThousandNotes &lt;&lt; std::endl;
-        std::cout &lt;&lt; "500 Notes: " &lt;&lt; noOfFiveHundredNotes &lt;&lt; std::endl;
-        std::cout &lt;&lt; "100 Notes: " &lt;&lt; noOfOneHundredNotes &lt;&lt; std::endl;
+        std::cout << "ATM Balance: " << atmBalance << std::endl;
+        std::cout << "2000 Notes: " << noOfTwoThousandNotes << std::endl;
+        std::cout << "500 Notes: " << noOfFiveHundredNotes << std::endl;
+        std::cout << "100 Notes: " << noOfOneHundredNotes << std::endl;
     }
 };

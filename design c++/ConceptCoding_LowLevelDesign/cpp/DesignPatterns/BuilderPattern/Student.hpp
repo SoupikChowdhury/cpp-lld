@@ -1,6 +1,6 @@
 #pragma once
-#include &lt;string&gt;
-#include &lt;vector&gt;
+#include <string>
+#include <vector>
 
 /**
  * Builder Pattern - Product
@@ -14,13 +14,13 @@ public:
     std::string name;
     std::string fatherName;
     std::string motherName;
-    std::vector&lt;std::string&gt; subjects;
+    std::vector<std::string> subjects;
 
     std::string toString() const {
         std::string subjectsStr;
-        for (size_t i = 0; i &lt; subjects.size(); ++i) {
+        for (size_t i = 0; i < subjects.size(); ++i) {
             subjectsStr += subjects[i];
-            if (i &lt; subjects.size() - 1) subjectsStr += ", ";
+            if (i < subjects.size() - 1) subjectsStr += ", ";
         }
         return "Roll: " + std::to_string(rollNumber) +
                " Age: " + std::to_string(age) +

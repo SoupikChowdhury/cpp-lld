@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
 #include <string>
 #include <chrono>
 #include <iomanip>

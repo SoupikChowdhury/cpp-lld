@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include <limits>
 #include <cmath>
 #include "ElevatorController.hpp"

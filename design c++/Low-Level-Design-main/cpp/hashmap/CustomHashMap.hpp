@@ -2,6 +2,7 @@
 #define CUSTOM_HASH_MAP_HPP
 
 #include <vector>
+#include <iostream>
 #include <functional>
 #include <optional>
 #include <stdexcept>

@@ -1,8 +1,8 @@
 #pragma once
 #include "../Coin.hpp"
 #include "../Item.hpp"
-#include &lt;vector&gt;
-#include &lt;memory&gt;
+#include <vector>
+#include <memory>
 
 // Forward declaration
 class VendingMachine;
@@ -17,12 +17,12 @@ class State {
 public:
     virtual ~State() = default;
 
-    virtual void clickOnInsertCoinButton(VendingMachine&amp; machine) = 0;
-    virtual void clickOnStartProductSelectionButton(VendingMachine&amp; machine) = 0;
-    virtual void insertCoin(VendingMachine&amp; machine, Coin coin) = 0;
-    virtual void chooseProduct(VendingMachine&amp; machine, int codeNumber) = 0;
+    virtual void clickOnInsertCoinButton(VendingMachine& machine) = 0;
+    virtual void clickOnStartProductSelectionButton(VendingMachine& machine) = 0;
+    virtual void insertCoin(VendingMachine& machine, Coin coin) = 0;
+    virtual void chooseProduct(VendingMachine& machine, int codeNumber) = 0;
     virtual int getChange(int returnChangeMoney) = 0;
-    virtual std::shared_ptr&lt;Item&gt; dispenseProduct(VendingMachine&amp; machine, int codeNumber) = 0;
-    virtual std::vector&lt;Coin&gt; refundFullMoney(VendingMachine&amp; machine) = 0;
-    virtual void updateInventory(VendingMachine&amp; machine, std::shared_ptr&lt;Item&gt; item, int codeNumber) = 0;
+    virtual std::shared_ptr<Item> dispenseProduct(VendingMachine& machine, int codeNumber) = 0;
+    virtual std::vector<Coin> refundFullMoney(VendingMachine& machine) = 0;
+    virtual void updateInventory(VendingMachine& machine, std::shared_ptr<Item> item, int codeNumber) = 0;
 };

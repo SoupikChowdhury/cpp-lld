@@ -1,8 +1,8 @@
 #pragma once
-#include "TransactionType.hpp"
-#include "Card.hpp"
-#include &lt;memory&gt;
-#include &lt;iostream&gt;
+#include "../TransactionType.hpp"
+#include "../Card.hpp"
+#include <memory>
+#include <iostream>
 
 // Forward declaration
 class ATM;
@@ -14,31 +14,31 @@ class ATMState {
 public:
     virtual ~ATMState() = default;
 
-    virtual void insertCard(ATM* atm, std::shared_ptr&lt;Card&gt; card) {
-        std::cout &lt;&lt; "OOPS!! Something went wrong" &lt;&lt; std::endl;
+    virtual void insertCard(ATM* atm, std::shared_ptr<Card> card) {
+        std::cout << "OOPS!! Something went wrong" << std::endl;
     }
 
-    virtual void authenticatePin(ATM* atm, std::shared_ptr&lt;Card&gt; card, int pin) {
-        std::cout &lt;&lt; "OOPS!! Something went wrong" &lt;&lt; std::endl;
+    virtual void authenticatePin(ATM* atm, std::shared_ptr<Card> card, int pin) {
+        std::cout << "OOPS!! Something went wrong" << std::endl;
     }
 
-    virtual void selectOperation(ATM* atm, std::shared_ptr&lt;Card&gt; card, TransactionType txnType) {
-        std::cout &lt;&lt; "OOPS!! Something went wrong" &lt;&lt; std::endl;
+    virtual void selectOperation(ATM* atm, std::shared_ptr<Card> card, TransactionType txnType) {
+        std::cout << "OOPS!! Something went wrong" << std::endl;
     }
 
-    virtual void cashWithdrawal(ATM* atm, std::shared_ptr&lt;Card&gt; card, int withdrawAmount) {
-        std::cout &lt;&lt; "OOPS!! Something went wrong" &lt;&lt; std::endl;
+    virtual void cashWithdrawal(ATM* atm, std::shared_ptr<Card> card, int withdrawAmount) {
+        std::cout << "OOPS!! Something went wrong" << std::endl;
     }
 
-    virtual void displayBalance(ATM* atm, std::shared_ptr&lt;Card&gt; card) {
-        std::cout &lt;&lt; "OOPS!! Something went wrong" &lt;&lt; std::endl;
+    virtual void displayBalance(ATM* atm, std::shared_ptr<Card> card) {
+        std::cout << "OOPS!! Something went wrong" << std::endl;
     }
 
     virtual void returnCard() {
-        std::cout &lt;&lt; "OOPS!! Something went wrong" &lt;&lt; std::endl;
+        std::cout << "OOPS!! Something went wrong" << std::endl;
     }
 
     virtual void exit(ATM* atm) {
-        std::cout &lt;&lt; "OOPS!! Something went wrong" &lt;&lt; std::endl;
+        std::cout << "OOPS!! Something went wrong" << std::endl;
     }
 };

@@ -66,22 +66,19 @@ class UniquePtr
             ptr = nullptr;
             return temp;
         }
-        ~UniquePtr() {
-            delete ptr;
-        }
 };
 int main(){
     UniquePtr<int> ptr1(new int(10));
    // UniquePtr<int> ptr2(ptr1); //compilation error
    // UniquePtr<int> ptr3 = ptr1;//compilation error
     UniquePtr<int> ptr4(new int(500));
-    ptr4=ptr1;//compilation error
+   // ptr4=ptr1;//compilation error
     UniquePtr<int> ptr3 = std::move(ptr1); //move constructor
     ptr4 = std::move(ptr3); //move assignment operator
-    ptr1->func();
-    cout<<*ptr1;
+   // ptr1->func(); //compilation error: int has no members, -> needs a class type
+    ptr1.reset(new int(20)); //ptr1 is empty after the move, give it a new value before using it
+    cout<<*ptr1<<endl;
     ptr1.get();
-    ptr1.reset(new int(20));
 
 
 }

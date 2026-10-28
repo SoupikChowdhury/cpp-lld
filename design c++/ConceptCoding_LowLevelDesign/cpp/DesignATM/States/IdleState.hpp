@@ -3,5 +3,5 @@
 
 class IdleState : public ATMState {
 public:
-    void insertCard(ATM* atm, std::shared_ptr&lt;Card&gt; card) override;
+    void insertCard(ATM* atm, std::shared_ptr<Card> card) override;
 };

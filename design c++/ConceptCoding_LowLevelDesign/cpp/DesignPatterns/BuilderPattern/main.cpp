@@ -1,5 +1,5 @@
 #include "Director.hpp"
-#include &lt;iostream&gt;
+#include <iostream>
 
 /**
  * Builder Pattern Demo
@@ -8,27 +8,27 @@
  */
 int main() {
     // Create Engineering Student
-    auto engBuilder = std::make_shared&lt;EngineeringStudentBuilder&gt;();
+    auto engBuilder = std::make_shared<EngineeringStudentBuilder>();
     Director engDirector(engBuilder);
     auto engineerStudent = engDirector.createStudent();
 
     // Create MBA Student
-    auto mbaBuilder = std::make_shared&lt;MBAStudentBuilder&gt;();
+    auto mbaBuilder = std::make_shared<MBAStudentBuilder>();
     Director mbaDirector(mbaBuilder);
     auto mbaStudent = mbaDirector.createStudent();
 
-    std::cout &lt;&lt; "Engineering Student: " &lt;&lt; engineerStudent-&gt;toString() &lt;&lt; std::endl;
-    std::cout &lt;&lt; "MBA Student: " &lt;&lt; mbaStudent-&gt;toString() &lt;&lt; std::endl;
+    std::cout << "Engineering Student: " << engineerStudent->toString() << std::endl;
+    std::cout << "MBA Student: " << mbaStudent->toString() << std::endl;
 
     // Builder can also be used without Director (Fluent interface)
-    std::cout &lt;&lt; "\n--- Using Builder Directly (Fluent) ---\n";
-    auto customBuilder = std::make_unique&lt;EngineeringStudentBuilder&gt;();
-    customBuilder-&gt;setRollNumber(100)
+    std::cout << "\n--- Using Builder Directly (Fluent) ---\n";
+    auto customBuilder = std::make_unique<EngineeringStudentBuilder>();
+    customBuilder->setRollNumber(100)
                   .setAge(20)
                   .setName("Custom Student")
                   .setSubjects();
-    auto customStudent = customBuilder-&gt;build();
-    std::cout &lt;&lt; "Custom: " &lt;&lt; customStudent-&gt;toString() &lt;&lt; std::endl;
+    auto customStudent = customBuilder->build();
+    std::cout << "Custom: " << customStudent->toString() << std::endl;
 
     return 0;
 }

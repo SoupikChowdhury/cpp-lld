@@ -1,44 +1,43 @@
 #include "ATM.hpp"
-#include "ATM.cpp"
 #include "User.hpp"
-#include &lt;iostream&gt;
+#include <iostream>
 
 int main() {
-    std::cout &lt;&lt; "=== ATM System Demo ===" &lt;&lt; std::endl;
+    std::cout << "=== ATM System Demo ===" << std::endl;
 
     // Initialize ATM
     ATM* atm = ATM::getATMObject();
-    atm-&gt;setAtmBalance(3500, 1, 2, 5);  // 1x2000 + 2x500 + 5x100 = 3500
+    atm->setAtmBalance(3500, 1, 2, 5);  // 1x2000 + 2x500 + 5x100 = 3500
 
     // Create user with bank account and card
-    auto bankAccount = std::make_shared&lt;UserBankAccount&gt;();
-    bankAccount-&gt;balance = 5000;
+    auto bankAccount = std::make_shared<UserBankAccount>();
+    bankAccount->balance = 5000;
 
-    auto card = std::make_shared&lt;Card&gt;();
-    card-&gt;setBankAccount(bankAccount);
+    auto card = std::make_shared<Card>();
+    card->setBankAccount(bankAccount);
 
     User user;
     user.setCard(card);
 
-    std::cout &lt;&lt; "\n--- Initial ATM Status ---" &lt;&lt; std::endl;
-    atm-&gt;printCurrentATMStatus();
+    std::cout << "\n--- Initial ATM Status ---" << std::endl;
+    atm->printCurrentATMStatus();
 
-    std::cout &lt;&lt; "\n--- User inserts card ---" &lt;&lt; std::endl;
-    atm-&gt;getCurrentATMState()-&gt;insertCard(atm, user.getCard());
+    std::cout << "\n--- User inserts card ---" << std::endl;
+    atm->getCurrentATMState()->insertCard(atm, user.getCard());
 
-    std::cout &lt;&lt; "\n--- User enters PIN ---" &lt;&lt; std::endl;
-    atm-&gt;getCurrentATMState()-&gt;authenticatePin(atm, user.getCard(), 112211);
+    std::cout << "\n--- User enters PIN ---" << std::endl;
+    atm->getCurrentATMState()->authenticatePin(atm, user.getCard(), 112211);
 
-    std::cout &lt;&lt; "\n--- User selects Cash Withdrawal ---" &lt;&lt; std::endl;
-    atm-&gt;getCurrentATMState()-&gt;selectOperation(atm, user.getCard(), TransactionType::CASH_WITHDRAWAL);
+    std::cout << "\n--- User selects Cash Withdrawal ---" << std::endl;
+    atm->getCurrentATMState()->selectOperation(atm, user.getCard(), TransactionType::CASH_WITHDRAWAL);
 
-    std::cout &lt;&lt; "\n--- User withdraws 2700 ---" &lt;&lt; std::endl;
-    atm-&gt;getCurrentATMState()-&gt;cashWithdrawal(atm, user.getCard(), 2700);
+    std::cout << "\n--- User withdraws 2700 ---" << std::endl;
+    atm->getCurrentATMState()->cashWithdrawal(atm, user.getCard(), 2700);
 
-    std::cout &lt;&lt; "\n--- Final ATM Status ---" &lt;&lt; std::endl;
-    atm-&gt;printCurrentATMStatus();
+    std::cout << "\n--- Final ATM Status ---" << std::endl;
+    atm->printCurrentATMStatus();
 
-    std::cout &lt;&lt; "\n--- User Bank Balance: " &lt;&lt; bankAccount-&gt;balance &lt;&lt; " ---" &lt;&lt; std::endl;
+    std::cout << "\n--- User Bank Balance: " << bankAccount->balance << " ---" << std::endl;
 
     return 0;
 }

@@ -7,7 +7,7 @@
  */
 class MBAStudentBuilder : public StudentBuilder {
 public:
-    StudentBuilder&amp; setSubjects() override {
+    StudentBuilder& setSubjects() override {
         subjects.clear();
         subjects.push_back("Micro Economics");
         subjects.push_back("Business Studies");

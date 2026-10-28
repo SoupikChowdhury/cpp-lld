@@ -2,9 +2,9 @@
 #include "IRobot.hpp"
 #include "HumanoidRobot.hpp"
 #include "RoboticDog.hpp"
-#include &lt;unordered_map&gt;
-#include &lt;memory&gt;
-#include &lt;string&gt;
+#include <unordered_map>
+#include <memory>
+#include <string>
 
 /**
  * Flyweight Factory
@@ -14,26 +14,26 @@
  */
 class RoboticFactory {
 private:
-    static std::unordered_map&lt;std::string, std::shared_ptr&lt;IRobot&gt;&gt; robotCache;
+    static std::unordered_map<std::string, std::shared_ptr<IRobot>> robotCache;
 
 public:
-    static std::shared_ptr&lt;IRobot&gt; createRobot(const std::string&amp; robotType) {
+    static std::shared_ptr<IRobot> createRobot(const std::string& robotType) {
         // Check if robot already exists in cache
         auto it = robotCache.find(robotType);
         if (it != robotCache.end()) {
-            std::cout &lt;&lt; "Returning cached " &lt;&lt; robotType &lt;&lt; std::endl;
-            return it-&gt;second;
+            std::cout << "Returning cached " << robotType << std::endl;
+            return it->second;
         }
 
         // Create new robot if not in cache
-        std::shared_ptr&lt;IRobot&gt; robot = nullptr;
+        std::shared_ptr<IRobot> robot = nullptr;
         
         if (robotType == "HUMANOID") {
-            auto sprite = std::make_shared&lt;Sprites&gt;();
-            robot = std::make_shared&lt;HumanoidRobot&gt;(robotType, sprite);
+            auto sprite = std::make_shared<Sprites>();
+            robot = std::make_shared<HumanoidRobot>(robotType, sprite);
         } else if (robotType == "ROBOTICDOG") {
-            auto sprite = std::make_shared&lt;Sprites&gt;();
-            robot = std::make_shared&lt;RoboticDog&gt;(robotType, sprite);
+            auto sprite = std::make_shared<Sprites>();
+            robot = std::make_shared<RoboticDog>(robotType, sprite);
         }
 
         if (robot) {
@@ -48,4 +48,4 @@ public:
 };
 
 // Initialize static member
-std::unordered_map&lt;std::string, std::shared_ptr&lt;IRobot&gt;&gt; RoboticFactory::robotCache;
+std::unordered_map<std::string, std::shared_ptr<IRobot>> RoboticFactory::robotCache;

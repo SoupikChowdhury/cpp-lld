@@ -1,6 +1,6 @@
 #pragma once
-#include &lt;memory&gt;
-#include &lt;iostream&gt;
+#include <memory>
+#include <iostream>
 
 // Forward declaration
 class ATM;
@@ -13,10 +13,10 @@ class ATM;
  */
 class CashWithdrawProcessor {
 protected:
-    std::shared_ptr&lt;CashWithdrawProcessor&gt; nextProcessor;
+    std::shared_ptr<CashWithdrawProcessor> nextProcessor;
 
 public:
-    explicit CashWithdrawProcessor(std::shared_ptr&lt;CashWithdrawProcessor&gt; next = nullptr)
+    explicit CashWithdrawProcessor(std::shared_ptr<CashWithdrawProcessor> next = nullptr)
         : nextProcessor(next) {}
 
     virtual ~CashWithdrawProcessor() = default;

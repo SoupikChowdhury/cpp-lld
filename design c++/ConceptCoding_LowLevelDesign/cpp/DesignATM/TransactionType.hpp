@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 /**
  * Transaction types supported by ATM
@@ -9,6 +10,6 @@ enum class TransactionType {
 };
 
 inline void showAllTransactionTypes() {
-    std::cout &lt;&lt; "1. CASH_WITHDRAWAL" &lt;&lt; std::endl;
-    std::cout &lt;&lt; "2. BALANCE_CHECK" &lt;&lt; std::endl;
+    std::cout << "1. CASH_WITHDRAWAL" << std::endl;
+    std::cout << "2. BALANCE_CHECK" << std::endl;
 }

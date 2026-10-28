@@ -1,6 +1,6 @@
 #pragma once
 #include "Item.hpp"
-#include &lt;memory&gt;
+#include <memory>
 
 /**
  * Represents a slot/shelf in the vending machine
@@ -8,7 +8,7 @@
 class ItemShelf {
 private:
     int code;
-    std::shared_ptr&lt;Item&gt; item;
+    std::shared_ptr<Item> item;
     bool soldOut;
 
 public:
@@ -17,8 +17,8 @@ public:
     int getCode() const { return code; }
     void setCode(int c) { code = c; }
 
-    std::shared_ptr&lt;Item&gt; getItem() const { return item; }
-    void setItem(std::shared_ptr&lt;Item&gt; i) { item = i; }
+    std::shared_ptr<Item> getItem() const { return item; }
+    void setItem(std::shared_ptr<Item> i) { item = i; }
 
     bool isSoldOut() const { return soldOut; }
     void setSoldOut(bool s) { soldOut = s; }

@@ -1,7 +1,8 @@
 #pragma once
 #include "FileSystem.hpp"
-#include &lt;vector&gt;
-#include &lt;memory&gt;
+#include <vector>
+#include <memory>
+#include <algorithm>
 
 /**
  * Composite Pattern - Composite
@@ -11,16 +12,16 @@
 class Directory : public FileSystem {
 private:
     std::string directoryName;
-    std::vector&lt;std::shared_ptr&lt;FileSystem&gt;&gt; children;
+    std::vector<std::shared_ptr<FileSystem>> children;
 
 public:
-    explicit Directory(const std::string&amp; name) : directoryName(name) {}
+    explicit Directory(const std::string& name) : directoryName(name) {}
 
-    void add(std::shared_ptr&lt;FileSystem&gt; component) {
+    void add(std::shared_ptr<FileSystem> component) {
         children.push_back(component);
     }
 
-    void remove(std::shared_ptr&lt;FileSystem&gt; component) {
+    void remove(std::shared_ptr<FileSystem> component) {
         children.erase(
             std::remove(children.begin(), children.end(), component),
             children.end()
@@ -28,9 +29,9 @@ public:
     }
 
     void ls() override {
-        std::cout &lt;&lt; "Directory: " &lt;&lt; directoryName &lt;&lt; std::endl;
-        for (const auto&amp; child : children) {
-            child-&gt;ls();
+        std::cout << "Directory: " << directoryName << std::endl;
+        for (const auto& child : children) {
+            child->ls();
         }
     }
 };
