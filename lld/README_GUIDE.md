@@ -69,6 +69,8 @@ Compile command, expected output, file map.
 
 1. **Describe our C++ code, not the reference page.** Read every file in the folder first. Class names, fields, method signatures and numbers in the README must match the code.
 2. **Run it before writing.** Compile `main.cpp`, run it, and test edge cases (full, invalid input, double operations) with a small scratch program. The Verification section and the "gaps" list come from those runs, not from reading.
+   - Compiler: GCC 16 from WinLibs (`...\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_...\mingw64\bin`). Put that folder first on `PATH` when compiling **and** running; otherwise the program picks up the old `C:\MinGW` runtime and exits with code 127.
+   - Also check every `cpp` excerpt against its source file line by line, and list README identifiers that don't exist in the code to confirm each one is deliberate.
 3. **Code excerpts are copied exactly** from the source files (trimming with `// ...` is fine). No rewritten "cleaner" versions presented as ours.
 4. **Always include "Gaps in our code".** If the code rounds wrong, races, leaks or dangles, say so with the one-line fix. The code itself is left as is unless asked; the README is where the interview answer lives.
 5. **Write in our own words.** The reference pages are for structure and ideas; don't paste their text.
@@ -105,8 +107,8 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | customer_support | README.md | todo |
 | doctors_appointment | README.md | todo |
 | hashmap | README.md | todo |
-| logger | README.md | todo |
-| rate_limiter | README.md | todo |
+| logger | README.md | done |
+| rate_limiter | README.md | done |
 | snakes_and_ladder | README.md | todo |
 | splitwise | README.md | todo |
 | elevator | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
