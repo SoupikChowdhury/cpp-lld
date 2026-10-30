@@ -73,6 +73,7 @@ Compile command, expected output, file map.
    - Also check every `cpp` excerpt against its source file line by line, and list README identifiers that don't exist in the code to confirm each one is deliberate.
 3. **Code excerpts are copied exactly** from the source files (trimming with `// ...` is fine). No rewritten "cleaner" versions presented as ours.
 4. **Always include "Gaps in our code".** If the code rounds wrong, races, leaks or dangles, say so with the one-line fix. The code itself is left as is unless asked; the README is where the interview answer lives.
+   - Exception: if `main.cpp` itself hangs or crashes, ask the user before writing. If they want it fixed, make the smallest fix, re-run every demo, and add a short "The bug this code used to have" section (as in `elevator`).
 5. **Write in our own words.** The reference pages are for structure and ideas; don't paste their text.
 6. **Design decisions show Good and Great only.** Leave out "Bad" options (user preference). The exported PDFs keep only the box headings, so the reasoning has to be written here.
 7. **Formatting for GitHub:**
@@ -111,7 +112,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | rate_limiter | README.md | done |
 | snakes_and_ladder | README.md | done |
 | splitwise | README.md | done |
-| elevator | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
+| elevator | README.md | done |
 | book_my_show | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | cricbuzz | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | order_management_system | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
@@ -127,4 +128,14 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | smart_pointers | none | todo |
 | string | none | todo |
 
-Open question for later: folders with `INTERVIEW_GUIDE.md` + `UML_DIAGRAM.md` could be merged into a single `README.md` in this format. Decide before converting the first one.
+### Plan for folders that have `INTERVIEW_GUIDE.md`
+
+Those guides follow the five steps but describe an idealized design (methods that don't exist, pseudocode only, no gaps, levels or self-test), so they are reworked, using them as raw material:
+
+| Group | Folders | Plan |
+|---|---|---|
+| Interview questions | elevator, book_my_show, tic_tac_toe, vending_machine, order_management_system, cricbuzz | Full rework into `README.md` in this format. |
+| ConceptCoding duplicates | ConceptCoding_atm, _car_rental, _hashmap, _snakes_and_ladder, _splitwise | Lighter `README.md`: how this design differs from the main folder's, its own gaps, how to run it. The main folder's README teaches the question. |
+| Pattern explainers | design_patterns/*, null_object | Lightest: check against the code, fix wrong names, add a short gaps list and self-test. |
+
+Once a folder's `README.md` is written, delete its old `INTERVIEW_GUIDE.md` and `UML_DIAGRAM.md` in the same commit (user decision, made on `elevator`), so a folder never has two documents that disagree.

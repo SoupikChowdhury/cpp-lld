@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iterator>
 #include <memory>
 #include <queue>
 #include <set>
@@ -46,22 +47,19 @@ public:
 
     void processRequests() {
         while (hasRequests()) {
-            Direction currentDir = elevatorCar->getDirection();
             int currentFloor = elevatorCar->getCurrentFloor();
 
-            // Process based on current direction
-            if (currentDir == Direction::UP || currentDir == Direction::NONE) {
-                if (!upRequests.empty()) {
-                    processUpRequests();
-                } else if (!downRequests.empty()) {
-                    processDownRequests();
-                }
+            // LOOK: sweep up serving UP requests ahead, then down serving DOWN requests ahead
+            if (hasUpRequestAtOrAbove(currentFloor)) {
+                processUpRequests();
+            } else if (hasDownRequestAtOrBelow(currentFloor)) {
+                processDownRequests();
+            } else if (!upRequests.empty()) {
+                // Only UP requests below us: go down to the lowest one, then sweep up
+                moveToFloor(*upRequests.begin());
             } else {
-                if (!downRequests.empty()) {
-                    processDownRequests();
-                } else if (!upRequests.empty()) {
-                    processUpRequests();
-                }
+                // Only DOWN requests above us: go up to the highest one, then sweep down
+                moveToFloor(*downRequests.rbegin());
             }
         }
         elevatorCar->stop();
@@ -69,10 +67,19 @@ public:
     }
 
 private:
+    bool hasUpRequestAtOrAbove(int floor) const {
+        return upRequests.lower_bound(floor) != upRequests.end();
+    }
+
+    bool hasDownRequestAtOrBelow(int floor) const {
+        return downRequests.upper_bound(floor) != downRequests.begin();
+    }
+
     void processUpRequests() {
-        while (!upRequests.empty()) {
-            int targetFloor = *upRequests.begin();
-            moveToFloor(targetFloor, Direction::UP);
+        // Serve UP requests at or above the current floor, lowest first
+        while (hasUpRequestAtOrAbove(elevatorCar->getCurrentFloor())) {
+            int targetFloor = *upRequests.lower_bound(elevatorCar->getCurrentFloor());
+            moveToFloor(targetFloor);
             upRequests.erase(targetFloor);
             elevatorCar->getInternalButtons()->clearButton(targetFloor);
             
@@ -85,9 +92,10 @@ private:
     }
 
     void processDownRequests() {
-        while (!downRequests.empty()) {
-            int targetFloor = *downRequests.rbegin();
-            moveToFloor(targetFloor, Direction::DOWN);
+        // Serve DOWN requests at or below the current floor, highest first
+        while (hasDownRequestAtOrBelow(elevatorCar->getCurrentFloor())) {
+            int targetFloor = *std::prev(downRequests.upper_bound(elevatorCar->getCurrentFloor()));
+            moveToFloor(targetFloor);
             downRequests.erase(targetFloor);
             elevatorCar->getInternalButtons()->clearButton(targetFloor);
             
@@ -99,18 +107,14 @@ private:
         }
     }
 
-    void moveToFloor(int targetFloor, Direction dir) {
-        elevatorCar->setDirection(dir);
-        elevatorCar->setState(ElevatorState::MOVING);
-
-        int currentFloor = elevatorCar->getCurrentFloor();
-        while (currentFloor != targetFloor) {
-            if (dir == Direction::UP) {
-                elevatorCar->moveUp();
-            } else {
-                elevatorCar->moveDown();
-            }
-            currentFloor = elevatorCar->getCurrentFloor();
+    void moveToFloor(int targetFloor) {
+        // Step towards the target from wherever the car is
+        while (elevatorCar->getCurrentFloor() < targetFloor) {
+            elevatorCar->moveUp();
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+        while (elevatorCar->getCurrentFloor() > targetFloor) {
+            elevatorCar->moveDown();
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
     }
