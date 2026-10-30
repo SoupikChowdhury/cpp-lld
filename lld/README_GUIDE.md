@@ -109,8 +109,8 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | hashmap | README.md | todo |
 | logger | README.md | done |
 | rate_limiter | README.md | done |
-| snakes_and_ladder | README.md | todo |
-| splitwise | README.md | todo |
+| snakes_and_ladder | README.md | done |
+| splitwise | README.md | done |
 | elevator | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | book_my_show | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | cricbuzz | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
