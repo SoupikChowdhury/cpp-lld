@@ -120,7 +120,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | tic_tac_toe | README.md | done |
 | vending_machine | README.md | done |
 | null_object | INTERVIEW_GUIDE.md | todo |
-| ConceptCoding_atm | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
+| ConceptCoding_atm | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_car_rental | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | ConceptCoding_hashmap | INTERVIEW_GUIDE.md | todo |
 | ConceptCoding_snakes_and_ladder | README.md (lighter: differences + own gaps) | done |

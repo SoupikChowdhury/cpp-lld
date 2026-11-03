@@ -7,6 +7,7 @@
 #include "Withdrawal/TwoThousandWithdrawProcessor.hpp"
 #include "Withdrawal/FiveHundredWithdrawProcessor.hpp"
 #include "Withdrawal/OneHundredWithdrawProcessor.hpp"
+#include <algorithm>
 
 // Static instance
 ATM* ATM::instance = nullptr;
@@ -62,13 +63,32 @@ void SelectOperationState::exit(ATM* atm) {
     std::cout << "Exit happens" << std::endl;
 }
 
+// Dry run of the 2000 -> 500 -> 100 chain: can the ATM's notes make exactly this amount?
+static bool canDispenseExactly(const ATM* atm, int amount) {
+    const int values[] = {2000, 500, 100};
+    const int notes[] = {atm->getNoOfTwoThousandNotes(), atm->getNoOfFiveHundredNotes(),
+                         atm->getNoOfOneHundredNotes()};
+    for (int i = 0; i < 3; ++i) {
+        int use = std::min(amount / values[i], notes[i]);
+        amount -= use * values[i];
+    }
+    return amount == 0;
+}
+
 // CashWithdrawalState implementation
 void CashWithdrawalState::cashWithdrawal(ATM* atm, std::shared_ptr<Card> card, int withdrawAmount) {
-    if (atm->getAtmBalance() < withdrawAmount) {
+    if (withdrawAmount <= 0) {
+        std::cout << "Invalid amount: " << withdrawAmount << std::endl;
+        exit(atm);
+    } else if (atm->getAtmBalance() < withdrawAmount) {
         std::cout << "Insufficient fund in the ATM Machine" << std::endl;
         exit(atm);
     } else if (card->getBankBalance() < withdrawAmount) {
         std::cout << "Insufficient fund in your Bank Account" << std::endl;
+        exit(atm);
+    } else if (!canDispenseExactly(atm, withdrawAmount)) {
+        // Check before debiting anything, so nobody is charged for cash that can't come out
+        std::cout << "Cannot dispense this exact amount with the available notes" << std::endl;
         exit(atm);
     } else {
         card->deductBankBalance(withdrawAmount);
