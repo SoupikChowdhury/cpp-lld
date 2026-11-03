@@ -117,7 +117,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | cricbuzz | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | order_management_system | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | tic_tac_toe | README.md | done |
-| vending_machine | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
+| vending_machine | README.md | done |
 | null_object | INTERVIEW_GUIDE.md | todo |
 | ConceptCoding_atm | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | ConceptCoding_car_rental | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |

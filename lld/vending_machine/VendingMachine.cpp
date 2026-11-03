@@ -48,7 +48,10 @@ void SelectionState::chooseProduct(VendingMachine& machine, int codeNumber) {
         if (paidByUser > item->getPrice()) {
             getChange(paidByUser - item->getPrice());
         }
-        machine.setState(std::make_shared<DispenseState>(machine, codeNumber));
+        // Enter Dispense first, then dispense; dispensing moves the machine back to Idle
+        auto dispenseState = std::make_shared<DispenseState>();
+        machine.setState(dispenseState);
+        dispenseState->dispenseProduct(machine, codeNumber);
     }
 }
 

@@ -11,9 +11,8 @@
  */
 class DispenseState : public State {
 public:
-    DispenseState(VendingMachine& machine, int codeNumber) {
+    DispenseState() {
         std::cout << "Currently Vending machine is in DispenseState" << std::endl;
-        dispenseProduct(machine, codeNumber);
     }
 
     void clickOnInsertCoinButton(VendingMachine& machine) override {
