@@ -160,6 +160,7 @@ std::shared_ptr<Booking> BookMyShow::createBooking(
     
     // Process payment
     if (booking->makePayment(paymentMethod)) {
+        std::lock_guard<std::mutex> lock(bookingsMutex);
         allBookings.push_back(booking);
         return booking;
     }
@@ -177,6 +178,7 @@ bool BookMyShow::cancelBooking(int bookingId) {
 }
 
 std::shared_ptr<Booking> BookMyShow::getBookingById(int bookingId) const {
+    std::lock_guard<std::mutex> lock(bookingsMutex);
     for (const auto& booking : allBookings) {
         if (booking->getBookingId() == bookingId) {
             return booking;
@@ -185,7 +187,8 @@ std::shared_ptr<Booking> BookMyShow::getBookingById(int bookingId) const {
     return nullptr;
 }
 
-const std::vector<std::shared_ptr<Booking>>& BookMyShow::getAllBookings() const {
+std::vector<std::shared_ptr<Booking>> BookMyShow::getAllBookings() const {
+    std::lock_guard<std::mutex> lock(bookingsMutex);
     return allBookings;
 }
 

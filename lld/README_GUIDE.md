@@ -71,6 +71,7 @@ Compile command, expected output, file map.
 2. **Run it before writing.** Compile `main.cpp`, run it, and test edge cases (full, invalid input, double operations) with a small scratch program. The Verification section and the "gaps" list come from those runs, not from reading.
    - Compiler: GCC 16 from WinLibs (`...\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_...\mingw64\bin`). Put that folder first on `PATH` when compiling **and** running; otherwise the program picks up the old `C:\MinGW` runtime and exits with code 127.
    - Also check every `cpp` excerpt against its source file line by line, and list README identifiers that don't exist in the code to confirm each one is deliberate.
+   - Concurrency tests: never swap `std::cout`'s buffer (or touch any other global) inside the test threads; that is a race in the test itself and inflates crash counts. Discard output at the shell instead, and compare against the original code from `git show HEAD:...`.
 3. **Code excerpts are copied exactly** from the source files (trimming with `// ...` is fine). No rewritten "cleaner" versions presented as ours.
 4. **Always include "Gaps in our code".** If the code rounds wrong, races, leaks or dangles, say so with the one-line fix. The code itself is left as is unless asked; the README is where the interview answer lives.
    - Exception: if `main.cpp` itself hangs or crashes, ask the user before writing. If they want it fixed, make the smallest fix, re-run every demo, and add a short "The bug this code used to have" section (as in `elevator`).
@@ -113,7 +114,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | snakes_and_ladder | README.md | done |
 | splitwise | README.md | done |
 | elevator | README.md | done |
-| book_my_show | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
+| book_my_show | README.md | done |
 | cricbuzz | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | order_management_system | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
 | tic_tac_toe | README.md | done |

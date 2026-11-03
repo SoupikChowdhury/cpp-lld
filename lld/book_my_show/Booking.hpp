@@ -1,6 +1,7 @@
 #ifndef BOOKING_HPP
 #define BOOKING_HPP
 
+#include <atomic>
 #include <memory>
 #include <vector>
 #include <string>
@@ -40,7 +41,7 @@ private:
     std::string customerPhone;
     std::string customerEmail;
 
-    static int nextBookingId;
+    static std::atomic<int> nextBookingId;  // atomic: bookings are created from many threads
 
 public:
     Booking(std::shared_ptr<Show> show, const std::vector<std::shared_ptr<Seat>>& seats,
@@ -150,6 +151,6 @@ public:
 };
 
 // Initialize static member
-inline int Booking::nextBookingId = 1000;
+inline std::atomic<int> Booking::nextBookingId{1000};
 
 #endif // BOOKING_HPP

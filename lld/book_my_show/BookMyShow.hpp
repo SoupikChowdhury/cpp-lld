@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <mutex>
 #include <string>
 #include "MovieController.hpp"
 #include "TheatreController.hpp"
@@ -22,7 +23,8 @@ private:
     std::shared_ptr<MovieController> movieController;
     std::shared_ptr<TheatreController> theatreController;
     std::vector<std::shared_ptr<Booking>> allBookings;
-    
+    mutable std::mutex bookingsMutex;  // Guards allBookings across concurrent bookings
+
     // Static show ID counter
     static int nextShowId;
 
@@ -105,8 +107,8 @@ public:
     // Get booking by ID
     std::shared_ptr<Booking> getBookingById(int bookingId) const;
     
-    // Get all bookings
-    const std::vector<std::shared_ptr<Booking>>& getAllBookings() const;
+    // Get all bookings (a copy, taken under the lock)
+    std::vector<std::shared_ptr<Booking>> getAllBookings() const;
 
     // ==================== Utility Operations ====================
     
