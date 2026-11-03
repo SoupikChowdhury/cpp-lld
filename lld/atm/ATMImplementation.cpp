@@ -15,7 +15,8 @@ ATMMachine::ATMMachine(const std::string& atmId, std::shared_ptr<ATMRepository> 
     if (!atm) {
         throw std::runtime_error("ATM not found");
     }
-    state = ATMStateFactory::getState(atm->getStatus(), this);
+    // A new machine has no card yet, so always start in Idle instead of resuming the stored status
+    setState(ATMStateFactory::getState(ATMStatus::IDLE, this));
 }
 
 // IdleState implementations
@@ -55,6 +56,12 @@ void AuthenticatedState::ejectCard() {
 
 // DispenseCashState implementations
 void DispenseCashState::dispenseCash(int amount) {
+    if (amount <= 0) {
+        std::cout << "Invalid amount: " << amount << std::endl;
+        ejectCard();
+        return;
+    }
+
     double atmBalance = atmMachine->getAtm()->getCashAvailable();
     double accountBalance = atmMachine->getCurrentCard()->getAccount()->getBalance();
 

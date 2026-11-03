@@ -104,7 +104,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | Folder | Current docs | Status |
 |---|---|---|
 | parking_lot | README.md | done |
-| atm | README.md | todo |
+| atm | README.md | done |
 | car_rental | README.md | todo |
 | customer_support | README.md | todo |
 | doctors_appointment | README.md | todo |
