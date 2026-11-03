@@ -54,6 +54,10 @@ public:
         if (status == BookingStatus::COMPLETED) {
             throw std::runtime_error("Cannot cancel a completed booking");
         }
+        if (status == BookingStatus::CANCELLED) {
+            // Releasing again could free a vehicle that has since been rented to someone else
+            throw std::runtime_error("Booking is already cancelled");
+        }
         status = BookingStatus::CANCELLED;
         if (vehicle) {
             vehicle->release();

@@ -76,6 +76,10 @@ public:
                            VehicleType vehicleType, time_t startDate, time_t endDate) {
         std::lock_guard<std::mutex> lock(mutex_);
 
+        if (endDate < startDate) {
+            throw std::runtime_error("End date is before start date");
+        }
+
         Branch* branch = nullptr;
         auto it = branches.find(branchId);
         if (it == branches.end()) {

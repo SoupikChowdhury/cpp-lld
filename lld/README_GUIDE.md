@@ -105,7 +105,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 |---|---|---|
 | parking_lot | README.md | done |
 | atm | README.md | done |
-| car_rental | README.md | todo |
+| car_rental | README.md | done |
 | customer_support | README.md | todo |
 | doctors_appointment | README.md | todo |
 | hashmap | README.md | done |
