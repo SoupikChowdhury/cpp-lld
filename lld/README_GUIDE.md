@@ -108,7 +108,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | car_rental | README.md | todo |
 | customer_support | README.md | todo |
 | doctors_appointment | README.md | todo |
-| hashmap | README.md | todo |
+| hashmap | README.md | done |
 | logger | README.md | done |
 | rate_limiter | README.md | done |
 | snakes_and_ladder | README.md | done |
