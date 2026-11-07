@@ -116,7 +116,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | elevator | README.md | done |
 | book_my_show | README.md | done |
 | cricbuzz | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
-| order_management_system | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
+| order_management_system | README.md | done |
 | tic_tac_toe | README.md | done |
 | vending_machine | README.md | done |
 | null_object | INTERVIEW_GUIDE.md | todo |

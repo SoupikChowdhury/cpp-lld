@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <sstream>
@@ -48,7 +49,7 @@ public:
     void calculateTotals() {
         subtotal_ = order_->getTotalAmount();
         taxAmount_ = subtotal_ * taxRate_;
-        totalAmount_ = subtotal_ + taxAmount_ + shippingCost_ - discount_;
+        totalAmount_ = std::max(0.0, subtotal_ + taxAmount_ + shippingCost_ - discount_);
     }
 
     // Getters
@@ -59,17 +60,6 @@ public:
     double getShippingCost() const { return shippingCost_; }
     double getDiscount() const { return discount_; }
     double getTotalAmount() const { return totalAmount_; }
-
-    // Setters
-    void setDiscount(double discount) {
-        discount_ = discount;
-        calculateTotals();
-    }
-
-    void setShippingCost(double cost) {
-        shippingCost_ = cost;
-        calculateTotals();
-    }
 
     std::string generateInvoice() const {
         std::stringstream ss;

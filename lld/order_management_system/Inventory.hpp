@@ -23,6 +23,9 @@ public:
      * @brief Add product to inventory
      */
     void addProduct(std::shared_ptr<Product> product, int quantity) {
+        if (quantity <= 0) {
+            throw std::invalid_argument("Quantity must be positive");
+        }
         std::string productId = product->getProductId();
         products_[productId] = product;
         stock_[productId] += quantity;
@@ -33,14 +36,10 @@ public:
      */
     bool removeProduct(const std::string& productId, int quantity) {
         auto stockIt = stock_.find(productId);
-        if (stockIt == stock_.end() || stockIt->second < quantity) {
+        if (quantity <= 0 || stockIt == stock_.end() || stockIt->second < quantity) {
             return false;
         }
-        stockIt->second -= quantity;
-        if (stockIt->second == 0) {
-            stock_.erase(stockIt);
-            products_.erase(productId);
-        }
+        stockIt->second -= quantity;  // A sold-out product stays listed, so it can be restocked
         return true;
     }
 
@@ -86,7 +85,7 @@ public:
      * @brief Restock a product
      */
     void restock(const std::string& productId, int quantity) {
-        if (products_.find(productId) != products_.end()) {
+        if (quantity > 0 && products_.find(productId) != products_.end()) {
             stock_[productId] += quantity;
         }
     }

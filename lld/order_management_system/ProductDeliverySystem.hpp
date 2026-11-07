@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include <mutex>
 #include "Product.hpp"
 #include "User.hpp"
 #include "UserController.hpp"
@@ -29,11 +30,24 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Cart>> userCarts_; // userId -> Cart
     int cartIdCounter_ = 0;
     int invoiceIdCounter_ = 0;
+    std::mutex cartsMutex_;
 
     ProductDeliverySystem()
         : userController_(UserController::getInstance())
         , warehouseController_(WarehouseController::getInstance())
         , orderController_(OrderController::getInstance()) {}
+
+    std::shared_ptr<Cart> findOrCreateCart(const std::string& userId) {
+        auto it = userCarts_.find(userId);
+        if (it != userCarts_.end()) {
+            return it->second;
+        }
+
+        std::string cartId = "CART" + std::to_string(++cartIdCounter_);
+        auto cart = std::make_shared<Cart>(cartId, userId);
+        userCarts_[userId] = cart;
+        return cart;
+    }
 
 public:
     // Singleton instance
@@ -82,23 +96,17 @@ public:
     // ============ Cart Management ============
 
     std::shared_ptr<Cart> getOrCreateCart(const std::string& userId) {
-        auto it = userCarts_.find(userId);
-        if (it != userCarts_.end()) {
-            return it->second;
-        }
-        
-        std::string cartId = "CART" + std::to_string(++cartIdCounter_);
-        auto cart = std::make_shared<Cart>(cartId, userId);
-        userCarts_[userId] = cart;
-        return cart;
+        std::lock_guard<std::mutex> lock(cartsMutex_);
+        return findOrCreateCart(userId);
     }
 
     void addToCart(const std::string& userId, std::shared_ptr<Product> product, int quantity = 1) {
-        auto cart = getOrCreateCart(userId);
-        cart->addProduct(product, quantity);
+        std::lock_guard<std::mutex> lock(cartsMutex_);
+        findOrCreateCart(userId)->addProduct(product, quantity);
     }
 
     void removeFromCart(const std::string& userId, const std::string& productId) {
+        std::lock_guard<std::mutex> lock(cartsMutex_);
         auto it = userCarts_.find(userId);
         if (it != userCarts_.end()) {
             it->second->removeProduct(productId);
@@ -106,6 +114,7 @@ public:
     }
 
     void clearCart(const std::string& userId) {
+        std::lock_guard<std::mutex> lock(cartsMutex_);
         auto it = userCarts_.find(userId);
         if (it != userCarts_.end()) {
             it->second->clear();
@@ -119,6 +128,8 @@ public:
      */
     std::shared_ptr<Order> placeOrder(const std::string& userId,
                                        std::shared_ptr<Address> deliveryAddress = nullptr) {
+        // Held until the cart is cleared, so a double submit can't order the same cart twice
+        std::lock_guard<std::mutex> lock(cartsMutex_);
         auto user = userController_.getUser(userId);
         auto cartIt = userCarts_.find(userId);
         
@@ -204,7 +215,7 @@ public:
     // ============ Invoice Generation ============
 
     /**
-     * @brief Generate invoice for an order
+     * @brief Generate invoice for an unpaid order; payment then charges the invoice total
      */
     std::unique_ptr<Invoice> generateInvoice(const std::string& orderId,
                                               double taxRate = 0.08,
@@ -214,9 +225,14 @@ public:
         if (!order) {
             throw std::runtime_error("Order not found");
         }
+        if (order->getStatus() != OrderStatus::PENDING) {
+            throw std::runtime_error("Invoice must be generated before payment");
+        }
 
         std::string invoiceId = "INV" + std::to_string(++invoiceIdCounter_);
-        return std::make_unique<Invoice>(invoiceId, order, taxRate, shippingCost, discount);
+        auto invoice = std::make_unique<Invoice>(invoiceId, order, taxRate, shippingCost, discount);
+        order->setAmountDue(invoice->getTotalAmount());
+        return invoice;
     }
 
     // ============ System Management ============

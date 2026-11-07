@@ -15,14 +15,32 @@
 namespace OrderManagement {
 
 /**
+ * @brief One line of an order, with the price the customer agreed to.
+ * A later price change must not alter an order already placed.
+ */
+struct OrderItem {
+    std::shared_ptr<Product> product;
+    int quantity;
+    double unitPrice;
+
+    OrderItem(std::shared_ptr<Product> prod, int qty, double price)
+        : product(prod), quantity(qty), unitPrice(price) {}
+
+    double getTotalPrice() const {
+        return unitPrice * quantity;
+    }
+};
+
+/**
  * @brief Class representing an order
  */
 class Order {
 private:
     std::string orderId_;
     std::shared_ptr<User> user_;
-    std::vector<CartItem> items_;
-    double totalAmount_;
+    std::vector<OrderItem> items_;
+    double totalAmount_;  // Sum of the items
+    double amountDue_;    // What payment charges: the invoice total once there is one
     OrderStatus status_;
     std::shared_ptr<Address> deliveryAddress_;
     std::shared_ptr<Warehouse> fulfillingWarehouse_;
@@ -44,17 +62,22 @@ public:
           std::shared_ptr<Address> deliveryAddress)
         : orderId_(orderId)
         , user_(user)
-        , items_(items)
         , totalAmount_(totalAmount)
+        , amountDue_(totalAmount)
         , status_(OrderStatus::PENDING)
         , deliveryAddress_(deliveryAddress)
-        , orderTime_(getCurrentTimestamp()) {}
+        , orderTime_(getCurrentTimestamp()) {
+        for (const auto& item : items) {
+            items_.emplace_back(item.product, item.quantity, item.product->getPrice());
+        }
+    }
 
     // Getters
     std::string getOrderId() const { return orderId_; }
     std::shared_ptr<User> getUser() const { return user_; }
-    const std::vector<CartItem>& getItems() const { return items_; }
+    const std::vector<OrderItem>& getItems() const { return items_; }
     double getTotalAmount() const { return totalAmount_; }
+    double getAmountDue() const { return amountDue_; }
     OrderStatus getStatus() const { return status_; }
     std::shared_ptr<Address> getDeliveryAddress() const { return deliveryAddress_; }
     std::shared_ptr<Warehouse> getFulfillingWarehouse() const { return fulfillingWarehouse_; }
@@ -62,7 +85,7 @@ public:
     std::string getOrderTime() const { return orderTime_; }
 
     // Setters
-    void setStatus(OrderStatus status) { status_ = status; }
+    void setAmountDue(double amount) { amountDue_ = amount; }
     void setFulfillingWarehouse(std::shared_ptr<Warehouse> warehouse) {
         fulfillingWarehouse_ = warehouse;
     }
@@ -79,17 +102,35 @@ public:
     }
 
     /**
-     * @brief Mark order as shipped
+     * @brief Check a fulfilment step: forward only, and only once paid.
+     * PENDING, CONFIRMED and CANCELLED come from placing, paying and cancelling.
      */
-    void ship() {
-        status_ = OrderStatus::SHIPPED;
+    bool canMoveTo(OrderStatus next) const {
+        switch (next) {
+            case OrderStatus::PENDING:
+            case OrderStatus::CONFIRMED:
+            case OrderStatus::CANCELLED:
+                return false;
+            case OrderStatus::RETURNED:
+                return status_ == OrderStatus::DELIVERED;
+            case OrderStatus::REFUNDED:
+                return status_ == OrderStatus::RETURNED;
+            default:
+                return status_ >= OrderStatus::CONFIRMED && status_ < OrderStatus::DELIVERED &&
+                       next > status_;
+        }
     }
 
     /**
-     * @brief Mark order as delivered
+     * @brief Apply a fulfilment step
+     * @return false if the step isn't allowed from the current status
      */
-    void deliver() {
-        status_ = OrderStatus::DELIVERED;
+    bool moveTo(OrderStatus next) {
+        if (!canMoveTo(next)) {
+            return false;
+        }
+        status_ = next;
+        return true;
     }
 
     /**

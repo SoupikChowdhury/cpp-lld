@@ -78,8 +78,13 @@ int main() {
         auto order1 = system.placeOrder(user1->getUserId());
         std::cout << order1->toString() << "\n";
 
+        // Generate Invoice: tax, shipping and discount set the amount to charge
+        std::cout << ">>> Generating invoice...\n\n";
+        auto invoice = system.generateInvoice(order1->getOrderId(), 0.08, 9.99, 50.0);
+        std::cout << invoice->generateInvoice() << "\n";
+
         // Pay with Card
-        std::cout << "\n>>> Processing payment with Credit Card...\n\n";
+        std::cout << ">>> Processing payment with Credit Card...\n\n";
         bool paymentSuccess = system.payWithCard(
             order1->getOrderId(),
             "4111111111111234",
@@ -92,11 +97,6 @@ int main() {
         if (paymentSuccess) {
             std::cout << "\nOrder confirmed! Status: " 
                       << orderStatusToString(order1->getStatus()) << "\n\n";
-
-            // Generate Invoice
-            std::cout << ">>> Generating invoice...\n\n";
-            auto invoice = system.generateInvoice(order1->getOrderId(), 0.08, 9.99, 50.0);
-            std::cout << invoice->generateInvoice() << "\n";
         }
 
     } catch (const std::exception& e) {
@@ -169,7 +169,7 @@ int main() {
     for (const auto& order : user1Orders) {
         std::cout << "Order: " << order->getOrderId() 
                   << " | Status: " << orderStatusToString(order->getStatus())
-                  << " | Amount: $" << order->getTotalAmount() << "\n";
+                  << " | Amount: $" << order->getAmountDue() << "\n";
     }
 
     std::cout << "\n╔═══════════════════════════════════════════════════════════╗\n";

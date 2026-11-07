@@ -54,8 +54,8 @@ public:
     std::shared_ptr<Warehouse> selectWarehouse(
         const std::vector<std::shared_ptr<Warehouse>>& warehouses,
         const Cart& cart,
-        const Address& deliveryAddress) override {
-        
+        const Address& /*deliveryAddress*/) override {
+
         std::shared_ptr<Warehouse> bestWarehouse = nullptr;
         int maxStock = -1;
 

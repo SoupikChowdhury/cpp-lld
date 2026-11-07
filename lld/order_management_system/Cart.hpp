@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
+#include <stdexcept>
 #include "Product.hpp"
 
 namespace OrderManagement {
@@ -43,6 +44,9 @@ public:
      * @brief Add product to cart
      */
     void addProduct(std::shared_ptr<Product> product, int quantity = 1) {
+        if (quantity <= 0) {
+            throw std::invalid_argument("Quantity must be positive");
+        }
         std::string productId = product->getProductId();
         auto it = items_.find(productId);
         if (it != items_.end()) {
