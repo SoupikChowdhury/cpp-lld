@@ -1,8 +1,11 @@
 #ifndef ISSUE_REPOSITORY_HPP
 #define ISSUE_REPOSITORY_HPP
 
+#include <algorithm>
+#include <deque>
+#include <functional>
 #include <unordered_map>
-#include <queue>
+#include <vector>
 #include <mutex>
 #include <sstream>
 #include <iomanip>
@@ -11,7 +14,7 @@
 class IssueRepository {
 private:
     std::unordered_map<std::string, Issue*> issues;
-    std::queue<Issue*> waitlist;
+    std::deque<Issue*> waitlist;
     mutable std::mutex mutex_;
     int issueCounter = 0;
 
@@ -46,14 +49,25 @@ public:
 
     void addToWaitlist(Issue* issue) {
         std::lock_guard<std::mutex> lock(mutex_);
-        waitlist.push(issue);
+        waitlist.push_back(issue);
     }
 
-    Issue* getNextFromWaitlist() {
+    // For an issue that has already waited its turn
+    void addToFrontOfWaitlist(Issue* issue) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        waitlist.push_front(issue);
+    }
+
+    // The oldest waiting issue that is preferred; if none is, the oldest of all
+    Issue* getNextFromWaitlist(const std::function<bool(const Issue*)>& preferred) {
         std::lock_guard<std::mutex> lock(mutex_);
         if (waitlist.empty()) return nullptr;
-        Issue* next = waitlist.front();
-        waitlist.pop();
+        auto it = std::find_if(waitlist.begin(), waitlist.end(), preferred);
+        if (it == waitlist.end()) {
+            it = waitlist.begin();
+        }
+        Issue* next = *it;
+        waitlist.erase(it);
         return next;
     }
 

@@ -1,6 +1,7 @@
 #ifndef AGENT_REPOSITORY_HPP
 #define AGENT_REPOSITORY_HPP
 
+#include <algorithm>
 #include <unordered_map>
 #include <vector>
 #include <mutex>
@@ -40,7 +41,8 @@ public:
         return (it != agents.end()) ? it->second : nullptr;
     }
 
-    std::vector<Agent*>& getAllAgents() {
+    std::vector<Agent*> getAllAgents() const {
+        std::lock_guard<std::mutex> lock(mutex_);
         return agentList;
     }
 

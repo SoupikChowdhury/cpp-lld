@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <iostream>
+#include <mutex>
+#include <stdexcept>
 #include "../repository/AgentRepository.hpp"
 #include "../repository/IssueRepository.hpp"
 #include "../strategy/AssignmentStrategy.hpp"
@@ -13,16 +15,49 @@ private:
     AgentRepository agentRepo;
     IssueRepository issueRepo;
     std::unique_ptr<AssignmentStrategy> assignmentStrategy;
+    mutable std::mutex mutex_;  // Makes choosing an agent and assigning to it one step
 
     void tryAssignFromWaitlist(Agent* agent) {
         if (issueRepo.hasWaitingIssues() && agent->isAvailable()) {
-            Issue* waitingIssue = issueRepo.getNextFromWaitlist();
+            // Prefer the oldest issue this agent has expertise in
+            Issue* waitingIssue = issueRepo.getNextFromWaitlist([agent](const Issue* issue) {
+                return agent->hasExpertise(issue->getType());
+            });
             if (waitingIssue) {
                 agent->assignIssue(waitingIssue);
-                std::cout << "  [Auto-assigned] Issue " << waitingIssue->getIssueId() 
+                std::cout << "  [Auto-assigned] Issue " << waitingIssue->getIssueId()
                           << " from waitlist to Agent " << agent->getName() << std::endl;
             }
         }
+    }
+
+    bool tryAssign(Issue* issue) {
+        std::vector<Agent*> agents = agentRepo.getAllAgents();
+        Agent* agent = assignmentStrategy->assignIssue(agents, issue);
+        if (agent == nullptr) {
+            return false;
+        }
+        agent->assignIssue(issue);
+        std::cout << "  [Assigned] Issue " << issue->getIssueId()
+                  << " to Agent " << agent->getName() << std::endl;
+        return true;
+    }
+
+    // For an issue taken back from an agent: it keeps its place ahead of newer issues
+    void reassign(Issue* issue) {
+        if (issue && !tryAssign(issue)) {
+            issueRepo.addToFrontOfWaitlist(issue);
+            std::cout << "  [Waitlist] Issue " << issue->getIssueId()
+                      << " back at the front of the queue" << std::endl;
+        }
+    }
+
+    Agent* requireAgent(const std::string& agentId) {
+        Agent* agent = agentRepo.getAgent(agentId);
+        if (agent == nullptr) {
+            throw std::runtime_error("Agent not found: " + agentId);
+        }
+        return agent;
     }
 
 public:
@@ -32,23 +67,48 @@ public:
 
     // Agent management
     void addAgent(Agent* agent) {
+        std::lock_guard<std::mutex> lock(mutex_);
         agentRepo.addAgent(agent);
+        tryAssignFromWaitlist(agentRepo.getAgent(agent->getAgentId()));
     }
 
     void removeAgent(const std::string& agentId) {
-        agentRepo.removeAgent(agentId);
+        std::lock_guard<std::mutex> lock(mutex_);
+        Agent* agent = agentRepo.getAgent(agentId);
+        if (agent) {
+            Issue* issue = agent->releaseCurrentIssue();
+            agentRepo.removeAgent(agentId);
+            reassign(issue);
+        }
     }
 
     Agent* getAgent(const std::string& agentId) {
         return agentRepo.getAgent(agentId);
     }
 
+    void setAgentOnline(const std::string& agentId) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        Agent* agent = requireAgent(agentId);
+        agent->goOnline();
+        tryAssignFromWaitlist(agent);
+    }
+
+    void setAgentOffline(const std::string& agentId) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        Agent* agent = requireAgent(agentId);
+        Issue* issue = agent->releaseCurrentIssue();
+        agent->goOffline();
+        reassign(issue);
+    }
+
     // Strategy management
     void setAssignmentStrategy(std::unique_ptr<AssignmentStrategy> strategy) {
+        std::lock_guard<std::mutex> lock(mutex_);
         assignmentStrategy = std::move(strategy);
     }
 
     std::string getActiveStrategy() const {
+        std::lock_guard<std::mutex> lock(mutex_);
         return assignmentStrategy->getStrategyName();
     }
 
@@ -56,17 +116,13 @@ public:
     Issue* raiseIssue(const std::string& customerId, 
                       const std::string& description,
                       IssueType type) {
+        std::lock_guard<std::mutex> lock(mutex_);
+
         // Create the issue
         Issue* issue = issueRepo.createIssue(customerId, description, type);
 
         // Try to assign to an agent
-        Agent* agent = assignmentStrategy->assignIssue(agentRepo.getAllAgents(), issue);
-        
-        if (agent != nullptr) {
-            agent->assignIssue(issue);
-            std::cout << "  [Assigned] Issue " << issue->getIssueId() 
-                      << " to Agent " << agent->getName() << std::endl;
-        } else {
+        if (!tryAssign(issue)) {
             issueRepo.addToWaitlist(issue);
             std::cout << "  [Waitlist] Issue " << issue->getIssueId() 
                       << " added to queue (no agents available)" << std::endl;
@@ -76,10 +132,8 @@ public:
     }
 
     void resolveIssue(const std::string& agentId) {
-        Agent* agent = agentRepo.getAgent(agentId);
-        if (agent == nullptr) {
-            throw std::runtime_error("Agent not found: " + agentId);
-        }
+        std::lock_guard<std::mutex> lock(mutex_);
+        Agent* agent = requireAgent(agentId);
 
         Issue* resolved = agent->resolveCurrentIssue();
         if (resolved) {
@@ -92,6 +146,7 @@ public:
     }
 
     void closeIssue(const std::string& issueId) {
+        std::lock_guard<std::mutex> lock(mutex_);
         Issue* issue = issueRepo.getIssue(issueId);
         if (issue) {
             issue->close();

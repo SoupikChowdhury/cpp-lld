@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
 #include "Issue.hpp"
 #include "../enums/AgentStatus.hpp"
 #include "../enums/IssueType.hpp"
@@ -47,9 +48,12 @@ public:
     }
 
     void assignIssue(Issue* issue) {
+        if (!isAvailable()) {
+            throw std::runtime_error("Agent " + agentId + " is not available");
+        }
+        issue->assignToAgent(agentId);
         currentIssue = issue;
         status = AgentStatus::BUSY;
-        issue->assignToAgent(agentId);
     }
 
     Issue* resolveCurrentIssue() {
@@ -58,15 +62,33 @@ public:
         currentIssue->resolve();
         Issue* resolved = currentIssue;
         currentIssue = nullptr;
-        status = AgentStatus::AVAILABLE;
+        if (status == AgentStatus::BUSY) {  // An offline agent stays offline
+            status = AgentStatus::AVAILABLE;
+        }
         resolvedCount++;
-        
+
         return resolved;
     }
 
-    void goOnline() { 
-        if (status == AgentStatus::OFFLINE) {
+    /**
+     * Give the current issue back unresolved, for an agent who can't finish it.
+     */
+    Issue* releaseCurrentIssue() {
+        if (currentIssue == nullptr) return nullptr;
+
+        currentIssue->releaseFromAgent();
+        Issue* released = currentIssue;
+        currentIssue = nullptr;
+        if (status == AgentStatus::BUSY) {
             status = AgentStatus::AVAILABLE;
+        }
+
+        return released;
+    }
+
+    void goOnline() {
+        if (status == AgentStatus::OFFLINE) {
+            status = currentIssue ? AgentStatus::BUSY : AgentStatus::AVAILABLE;
         }
     }
 

@@ -36,9 +36,9 @@ int main() {
     // Test with Round Robin Strategy (default)
     std::cout << std::endl << "--- Raising Issues (Round Robin Strategy) ---" << std::endl;
     
-    Issue* issue1 = supportService.raiseIssue("C001", "Cannot login to my account", IssueType::ACCOUNT);
-    Issue* issue2 = supportService.raiseIssue("C002", "Payment not processed", IssueType::BILLING);
-    Issue* issue3 = supportService.raiseIssue("C003", "App crashes on startup", IssueType::TECHNICAL);
+    supportService.raiseIssue("C001", "Cannot login to my account", IssueType::ACCOUNT);
+    supportService.raiseIssue("C002", "Payment not processed", IssueType::BILLING);
+    supportService.raiseIssue("C003", "App crashes on startup", IssueType::TECHNICAL);
 
     std::cout << std::endl << "--- Agent Status After Assignments ---" << std::endl;
     for (Agent* agent : supportService.getAllAgents()) {
@@ -52,8 +52,8 @@ int main() {
 
     // More issues - should go to waitlist
     std::cout << std::endl << "--- Raising More Issues (All agents busy) ---" << std::endl;
-    Issue* issue4 = supportService.raiseIssue("C004", "Refund not received", IssueType::BILLING);
-    Issue* issue5 = supportService.raiseIssue("C005", "Feature request", IssueType::GENERAL);
+    supportService.raiseIssue("C004", "Refund not received", IssueType::BILLING);
+    supportService.raiseIssue("C005", "Feature request", IssueType::GENERAL);
 
     supportService.printStatus();
 
@@ -85,8 +85,8 @@ int main() {
 
     // Raise new issues with expertise matching
     std::cout << std::endl << "--- Raising Issues (Expertise Match Strategy) ---" << std::endl;
-    Issue* issue6 = supportService.raiseIssue("C006", "Bug in mobile app", IssueType::TECHNICAL);
-    Issue* issue7 = supportService.raiseIssue("C007", "Billing discrepancy", IssueType::BILLING);
+    supportService.raiseIssue("C006", "Bug in mobile app", IssueType::TECHNICAL);
+    supportService.raiseIssue("C007", "Billing discrepancy", IssueType::BILLING);
 
     std::cout << std::endl << "--- Final Agent Status ---" << std::endl;
     for (Agent* agent : supportService.getAllAgents()) {

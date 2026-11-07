@@ -6,7 +6,7 @@
 
 class LeastLoadedStrategy : public AssignmentStrategy {
 public:
-    Agent* assignIssue(std::vector<Agent*>& agents, Issue* issue) override {
+    Agent* assignIssue(std::vector<Agent*>& agents, Issue* /*issue*/) override {
         if (agents.empty()) return nullptr;
 
         Agent* leastLoaded = nullptr;

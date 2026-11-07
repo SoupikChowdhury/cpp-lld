@@ -8,7 +8,7 @@ private:
     size_t lastAssignedIndex = 0;
 
 public:
-    Agent* assignIssue(std::vector<Agent*>& agents, Issue* issue) override {
+    Agent* assignIssue(std::vector<Agent*>& agents, Issue* /*issue*/) override {
         if (agents.empty()) return nullptr;
 
         size_t startIndex = lastAssignedIndex;
