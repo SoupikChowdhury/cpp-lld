@@ -13,7 +13,7 @@ private:
 public:
     explicit File(const std::string& name) : fileName(name) {}
 
-    void ls() override {
-        std::cout << "File: " << fileName << std::endl;
+    void ls(int depth = 0) override {
+        std::cout << std::string(depth * 2, ' ') << "File: " << fileName << std::endl;
     }
 };

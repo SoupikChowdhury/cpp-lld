@@ -125,7 +125,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | ConceptCoding_hashmap | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_snakes_and_ladder | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_splitwise | README.md (lighter: differences + own gaps) | done |
-| design_patterns | per-pattern INTERVIEW_GUIDE.md | todo |
+| design_patterns | per-pattern README.md (lightest) | done |
 | smart_pointers | none | todo |
 | string | none | todo |
 

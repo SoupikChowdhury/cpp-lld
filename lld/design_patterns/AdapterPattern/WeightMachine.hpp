@@ -1,8 +1,8 @@
 #pragma once
 
 /**
- * Adapter Pattern - Target Interface
- * 
+ * Adapter Pattern - Adaptee Interface
+ *
  * The existing interface that returns weight in Pounds.
  * This is the "incompatible" interface we need to adapt.
  */

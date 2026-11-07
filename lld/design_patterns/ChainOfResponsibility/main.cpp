@@ -15,9 +15,9 @@ int main() {
     auto infoProcessor = std::make_shared<InfoLogProcessor>(debugProcessor);
 
     // Test the chain with different log levels
-    infoProcessor->log(LogProcessor::ERROR, "exception happens");
-    infoProcessor->log(LogProcessor::DEBUG, "need to debug this");
-    infoProcessor->log(LogProcessor::INFO, "just for info");
+    infoProcessor->log(LogProcessor::Level::ERROR, "exception happens");
+    infoProcessor->log(LogProcessor::Level::DEBUG, "need to debug this");
+    infoProcessor->log(LogProcessor::Level::INFO, "just for info");
 
     return 0;
 }

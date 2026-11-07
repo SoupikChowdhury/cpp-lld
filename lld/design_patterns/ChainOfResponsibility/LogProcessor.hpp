@@ -12,9 +12,7 @@
  */
 class LogProcessor {
 public:
-    static const int INFO = 1;
-    static const int DEBUG = 2;
-    static const int ERROR = 3;
+    enum class Level { INFO, DEBUG, ERROR };
 
 protected:
     std::shared_ptr<LogProcessor> nextLogProcessor;
@@ -25,7 +23,7 @@ public:
 
     virtual ~LogProcessor() = default;
 
-    virtual void log(int logLevel, const std::string& message) {
+    virtual void log(Level logLevel, const std::string& message) {
         if (nextLogProcessor != nullptr) {
             nextLogProcessor->log(logLevel, message);
         }

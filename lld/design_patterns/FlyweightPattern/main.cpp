@@ -34,9 +34,9 @@ int main() {
     std::cout << std::endl;
 
     // Verify caching
-    std::cout << "Total robot types in cache: " << RoboticFactory::getCacheSize() << std::endl;
-    std::cout << "Total robot instances created: 5" << std::endl;
-    std::cout << "Heavy objects created: " << RoboticFactory::getCacheSize() << std::endl;
+    std::cout << "Robots requested: 5" << std::endl;
+    std::cout << "Robot objects created: " << RoboticFactory::getCacheSize() << std::endl;
+    std::cout << "Sprite objects created: " << RoboticFactory::getCacheSize() << std::endl;
 
     // Same object reference check
     std::cout << "\nhumanoid1 == humanoid2: " 

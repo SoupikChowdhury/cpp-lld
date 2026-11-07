@@ -1,4 +1,6 @@
 #include "Director.hpp"
+#include "EngineeringStudentBuilder.hpp"
+#include "MBAStudentBuilder.hpp"
 #include <iostream>
 
 /**
@@ -10,12 +12,12 @@ int main() {
     // Create Engineering Student
     auto engBuilder = std::make_shared<EngineeringStudentBuilder>();
     Director engDirector(engBuilder);
-    auto engineerStudent = engDirector.createStudent();
+    auto engineerStudent = engDirector.createBasicStudent();
 
     // Create MBA Student
     auto mbaBuilder = std::make_shared<MBAStudentBuilder>();
     Director mbaDirector(mbaBuilder);
-    auto mbaStudent = mbaDirector.createStudent();
+    auto mbaStudent = mbaDirector.createStudentWithParents();
 
     std::cout << "Engineering Student: " << engineerStudent->toString() << std::endl;
     std::cout << "MBA Student: " << mbaStudent->toString() << std::endl;

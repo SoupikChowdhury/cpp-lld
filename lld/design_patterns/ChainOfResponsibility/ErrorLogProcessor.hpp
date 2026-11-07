@@ -10,8 +10,8 @@ public:
     explicit ErrorLogProcessor(std::shared_ptr<LogProcessor> next = nullptr)
         : LogProcessor(next) {}
 
-    void log(int logLevel, const std::string& message) override {
-        if (logLevel == ERROR) {
+    void log(Level logLevel, const std::string& message) override {
+        if (logLevel == Level::ERROR) {
             std::cout << "ERROR: " << message << std::endl;
         } else {
             LogProcessor::log(logLevel, message);

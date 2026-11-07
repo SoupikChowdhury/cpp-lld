@@ -13,10 +13,10 @@
 class HumanoidRobot : public IRobot {
 private:
     std::string type;                      // Intrinsic - shared
-    std::shared_ptr<Sprites> body;        // Intrinsic - shared (heavy object)
+    std::shared_ptr<const Sprites> body;  // Intrinsic - shared (heavy object)
 
 public:
-    HumanoidRobot(const std::string& t, std::shared_ptr<Sprites> b)
+    HumanoidRobot(const std::string& t, std::shared_ptr<const Sprites> b)
         : type(t), body(b) {
         std::cout << "Creating HumanoidRobot (expensive operation)" << std::endl;
     }

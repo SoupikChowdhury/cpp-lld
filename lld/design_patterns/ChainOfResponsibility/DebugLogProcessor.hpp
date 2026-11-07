@@ -10,8 +10,8 @@ public:
     explicit DebugLogProcessor(std::shared_ptr<LogProcessor> next = nullptr)
         : LogProcessor(next) {}
 
-    void log(int logLevel, const std::string& message) override {
-        if (logLevel == DEBUG) {
+    void log(Level logLevel, const std::string& message) override {
+        if (logLevel == Level::DEBUG) {
             std::cout << "DEBUG: " << message << std::endl;
         } else {
             LogProcessor::log(logLevel, message);

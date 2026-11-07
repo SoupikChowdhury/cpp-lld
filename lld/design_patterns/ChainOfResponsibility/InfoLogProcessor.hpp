@@ -10,8 +10,8 @@ public:
     explicit InfoLogProcessor(std::shared_ptr<LogProcessor> next = nullptr)
         : LogProcessor(next) {}
 
-    void log(int logLevel, const std::string& message) override {
-        if (logLevel == INFO) {
+    void log(Level logLevel, const std::string& message) override {
+        if (logLevel == Level::INFO) {
             std::cout << "INFO: " << message << std::endl;
         } else {
             LogProcessor::log(logLevel, message);

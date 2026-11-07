@@ -10,5 +10,8 @@
 class FileSystem {
 public:
     virtual ~FileSystem() = default;
-    virtual void ls() = 0;
+    virtual void ls(int depth = 0) = 0;
+
+    // Is this component, or anything inside it, the given one?
+    virtual bool contains(const FileSystem* other) const { return this == other; }
 };

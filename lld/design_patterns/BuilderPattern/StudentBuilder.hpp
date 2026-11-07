@@ -1,14 +1,15 @@
 #pragma once
 #include "Student.hpp"
 #include <memory>
+#include <stdexcept>
 
 /**
  * Builder Pattern - Abstract Builder
- * 
+ *
  * Defines all steps to build a Student object.
  */
 class StudentBuilder {
-public:
+protected:
     int rollNumber = 0;
     int age = 0;
     std::string name;
@@ -16,6 +17,7 @@ public:
     std::string motherName;
     std::vector<std::string> subjects;
 
+public:
     virtual ~StudentBuilder() = default;
 
     StudentBuilder& setRollNumber(int roll) {
@@ -46,8 +48,16 @@ public:
     // Abstract method - concrete builders implement this
     virtual StudentBuilder& setSubjects() = 0;
 
-    std::unique_ptr<Student> build() {
-        auto student = std::make_unique<Student>();
+    std::unique_ptr<Student> build() const {
+        if (name.empty()) {
+            throw std::invalid_argument("A student needs a name");
+        }
+        if (subjects.empty()) {
+            throw std::invalid_argument("A student needs subjects: call setSubjects");
+        }
+
+        // Not make_unique: it couldn't reach Student's private constructor
+        std::unique_ptr<Student> student(new Student());
         student->rollNumber = rollNumber;
         student->age = age;
         student->name = name;
