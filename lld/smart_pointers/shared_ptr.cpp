@@ -1,4 +1,8 @@
-#include<bits/stdc++.h>
+#include <atomic>
+#include <iostream>
+#include <thread>
+#include <utility>
+#include <vector>
 
 using namespace std;
 template<typename T>
@@ -38,18 +42,19 @@ class SharedPtr
                 refCount->fetch_add(1, memory_order_relaxed);
         }
 
+        void swap(SharedPtr& other) noexcept
+        {
+            std::swap(ptr, other.ptr);
+            std::swap(refCount, other.refCount);
+        }
+
         //copy assignment operator
         SharedPtr& operator=(const SharedPtr& other)
         {
-            if(this != &other)
-            {
-                release();
-                ptr = other.ptr;
-                refCount = other.refCount;
-                if(refCount)
-                    refCount->fetch_add(1, memory_order_relaxed);
-            }
-            return *this;
+            //copy first: other may live inside the object we are about to release (head = head->next)
+            SharedPtr temp(other);
+            swap(temp);
+            return *this; //temp releases the old object here
         }
 
         //move constructor: take ownership, count stays the same
@@ -64,14 +69,9 @@ class SharedPtr
         //move assignment operator
         SharedPtr& operator=(SharedPtr&& other) noexcept
         {
-            if(this != &other)
-            {
-                release();
-                ptr = other.ptr;
-                refCount = other.refCount;
-                other.ptr = nullptr;
-                other.refCount = nullptr;
-            }
+            //same reason as above, and it also makes self move assignment safe
+            SharedPtr temp(std::move(other));
+            swap(temp);
             return *this;
         }
 
@@ -90,6 +90,11 @@ class SharedPtr
             return ptr;
         }
 
+        explicit operator bool() const //so if(ptr) works
+        {
+            return ptr != nullptr;
+        }
+
         unsigned int use_count() const //number of owners
         {
             return refCount ? refCount->load(memory_order_relaxed) : 0;
@@ -97,12 +102,10 @@ class SharedPtr
 
         void reset(T* p = nullptr) //reset method
         {
-            release();
-            if(p)
-            {
-                ptr = p;
-                refCount = new atomic<unsigned int>(1);
-            }
+            if(p == ptr) //resetting to the pointer we already own must not delete it
+                return;
+            SharedPtr temp(p);
+            swap(temp);
         }
 };
 
@@ -110,6 +113,14 @@ struct Demo
 {
     void func() { cout<<"Demo::func called"<<endl; }
     ~Demo() { cout<<"Demo destroyed"<<endl; }
+};
+
+struct Node
+{
+    int value;
+    SharedPtr<Node> next;
+    explicit Node(int v):value(v){}
+    ~Node() { cout<<"Node "<<value<<" destroyed"<<endl; }
 };
 
 int main(){
@@ -154,6 +165,14 @@ int main(){
             t.join();
         cout<<"count after threads: "<<shared.use_count()<<endl; //1
     } //Demo destroyed once
+
+    {
+        //a linked list: dropping the first node must keep the rest
+        SharedPtr<Node> head(new Node(1));
+        head->next = SharedPtr<Node>(new Node(2));
+        head = head->next; //only node 1 is destroyed
+        cout<<"head is now node "<<head->value<<", count: "<<head.use_count()<<endl; //2, 1
+    }
 
     return 0;
 }

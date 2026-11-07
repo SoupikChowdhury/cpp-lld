@@ -1,4 +1,5 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <utility>
 
 using namespace std;
 template<typename T>
@@ -9,7 +10,7 @@ class UniquePtr
     public:
         UniquePtr():ptr(nullptr){} //default constructor
 
-        UniquePtr(T* p):ptr(p){} //parameterized constructor
+        explicit UniquePtr(T* p):ptr(p){} //parameterized constructor, explicit so a raw pointer can't become owned by accident
 
         ~UniquePtr() //destructor
         {
@@ -32,9 +33,8 @@ class UniquePtr
         {
             if(this != &other)
             {
-                delete ptr;
-                ptr = other.ptr;
-                other.ptr = nullptr;
+                //take other's pointer first: other may live inside the object we are about to delete (head = move(head->next))
+                reset(other.release());
             }
             return *this;
         }
@@ -54,10 +54,18 @@ class UniquePtr
             return ptr;
         }
 
+        explicit operator bool() const //so if(ptr) works
+        {
+            return ptr != nullptr;
+        }
+
         void reset(T* p = nullptr) //reset method
         {
-            delete ptr;
-            ptr = p;
+            if(p == ptr) //resetting to the pointer we already own must not delete it
+                return;
+            T* old = ptr;
+            ptr = p; //update first: deleting old may run code that reaches this pointer
+            delete old;
         }
 
         T* release() //release method
@@ -67,6 +75,15 @@ class UniquePtr
             return temp;
         }
 };
+
+struct Node
+{
+    int value;
+    UniquePtr<Node> next;
+    explicit Node(int v):value(v){}
+    ~Node() { cout<<"Node "<<value<<" destroyed"<<endl; }
+};
+
 int main(){
     UniquePtr<int> ptr1(new int(10));
    // UniquePtr<int> ptr2(ptr1); //compilation error
@@ -80,5 +97,9 @@ int main(){
     cout<<*ptr1<<endl;
     ptr1.get();
 
-
+    //a linked list: dropping the first node must keep the rest
+    UniquePtr<Node> head(new Node(1));
+    head->next = UniquePtr<Node>(new Node(2));
+    head = std::move(head->next); //only node 1 is destroyed
+    cout<<"head is now node "<<head->value<<endl;
 }
