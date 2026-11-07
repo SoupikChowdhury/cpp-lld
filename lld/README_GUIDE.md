@@ -73,7 +73,7 @@ Compile command, expected output, file map.
    - Also check every `cpp` excerpt against its source file line by line, and list README identifiers that don't exist in the code to confirm each one is deliberate.
    - Concurrency tests: never swap `std::cout`'s buffer (or touch any other global) inside the test threads; that is a race in the test itself and inflates crash counts. Discard output at the shell instead, and compare against the original code from `git show HEAD:...`.
 3. **Code excerpts are copied exactly** from the source files (trimming with `// ...` is fine). No rewritten "cleaner" versions presented as ours.
-4. **Always include "Gaps in our code".** If the code rounds wrong, races, leaks or dangles, say so with the one-line fix. The code itself is left as is unless asked; the README is where the interview answer lives.
+4. **Always include "Gaps in our code".** If the code rounds wrong, races, leaks or dangles, say so with the one-line fix. Fix real defects in the code when you find them (user decision, made across this conversion), and record them in a "bugs this code used to have" section; design limits stay in the gaps table, with the fix to say.
    - Exception: if `main.cpp` itself hangs or crashes, ask the user before writing. If they want it fixed, make the smallest fix, re-run every demo, and add a short "The bug this code used to have" section (as in `elevator`).
 5. **Write in our own words.** The reference pages are for structure and ideas; don't paste their text.
 6. **Design decisions show Good and Great only.** Leave out "Bad" options (user preference). The exported PDFs keep only the box headings, so the reasoning has to be written here.
