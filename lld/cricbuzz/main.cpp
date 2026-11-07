@@ -114,6 +114,26 @@ int main() {
     // End innings and show scorecard
     match->endInning();
 
+    // Second Innings - Australia chase the target
+    match->startInning(australia, india);
+
+    match->startOver(india->getPlayerById("P8"));  // Bumrah
+    match->playBall(BallType::NORMAL, 6, RunType::SIX);
+    match->playBall(BallType::NORMAL, 4, RunType::FOUR);
+    match->playBall(BallType::NORMAL, 0, RunType::ZERO);
+    match->playBall(BallType::NORMAL, 6, RunType::SIX);
+    match->playBall(BallType::NORMAL, 1, RunType::ONE);
+    match->playBall(BallType::NORMAL, 4, RunType::FOUR);
+
+    match->startOver(india->getPlayerById("P9"));  // Siraj
+    match->playBall(BallType::NORMAL, 4, RunType::FOUR);
+    match->playBall(BallType::NORMAL, 2, RunType::TWO);
+    match->playBall(BallType::NORMAL, 2, RunType::TWO);  // Target reached
+
+    match->endInning();
+    match->determineResult();
+    std::cout << "\n" << match->toString();
+
     std::cout << "\n=== INDIVIDUAL PLAYER STATS ===\n\n";
     
     // Show batting stats for opening batsmen

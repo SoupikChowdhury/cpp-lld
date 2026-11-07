@@ -115,7 +115,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | splitwise | README.md | done |
 | elevator | README.md | done |
 | book_my_show | README.md | done |
-| cricbuzz | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
+| cricbuzz | README.md | done |
 | order_management_system | README.md | done |
 | tic_tac_toe | README.md | done |
 | vending_machine | README.md | done |

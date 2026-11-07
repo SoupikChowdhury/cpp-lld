@@ -142,11 +142,24 @@ public:
      * @brief Start a new innings
      */
     void startInning(std::shared_ptr<Team> battingTeam, std::shared_ptr<Team> bowlingTeam) {
+        if (innings_.size() >= 2) {
+            std::cout << "Both innings have been played!\n";
+            return;
+        }
+        if (currentInning_ && !currentInning_->isComplete()) {
+            std::cout << "The current innings is still in progress!\n";
+            return;
+        }
+
         currentInningNumber_++;
-        
-        // Reset score cards for both teams
-        battingTeam->resetAllScoreCards();
-        
+
+        // Reset score cards for both teams at the start of the match only: the scorecards
+        // of the first innings must survive the second
+        if (currentInningNumber_ == 1) {
+            battingTeam->resetAllScoreCards();
+            bowlingTeam->resetAllScoreCards();
+        }
+
         currentInning_ = std::make_shared<InningDetails>(
             currentInningNumber_, battingTeam, bowlingTeam, matchType_->getOversPerInning());
         
@@ -167,15 +180,36 @@ public:
      */
     void playBall(BallType ballType, int runs, RunType runType,
                   std::shared_ptr<Wicket> wicket = nullptr) {
-        if (!currentInning_) {
+        if (!currentInning_ || currentInning_->isComplete()) {
             std::cout << "No active innings!\n";
             return;
         }
-        
+        if (!currentInning_->hasOverInProgress()) {
+            std::cout << "No over in progress!\n";
+            return;
+        }
+
         auto striker = currentInning_->getStriker();
         auto nonStriker = currentInning_->getNonStriker();
         auto bowler = currentInning_->getCurrentBowler();
-        
+
+        if (ballType == BallType::NORMAL && currentInning_->isFreeHitNext()) {
+            ballType = BallType::FREE_HIT;
+        }
+
+        // Refuse an impossible dismissal before anything is recorded
+        if (wicket) {
+            if (wicket->getBatsmanOut() != striker && wicket->getBatsmanOut() != nonStriker) {
+                std::cout << "That batsman is not at the crease!\n";
+                return;
+            }
+            if (!canBeOutOn(ballType, wicket->getWicketType())) {
+                std::cout << "Cannot be out " << wicketTypeToString(wicket->getWicketType())
+                          << " on a " << ballTypeToString(ballType) << "!\n";
+                return;
+            }
+        }
+
         int ballNumber = currentInning_->getBallsInCurrentOver() + 1;
         
         auto ballDetails = std::make_shared<BallDetails>(
@@ -189,6 +223,7 @@ public:
         notifyObservers(ballDetails);
         
         // Update innings
+        currentInning_->recordBall(ballDetails);
         bool isExtra = (runType == RunType::WIDE || runType == RunType::NO_BALL ||
                         runType == RunType::BYE || runType == RunType::LEG_BYE);
         currentInning_->addRuns(runs, runType, isExtra);
@@ -213,11 +248,28 @@ public:
      * @brief Start a new over with specified bowler
      */
     void startOver(std::shared_ptr<Player> bowler) {
-        if (!currentInning_) {
+        if (!currentInning_ || currentInning_->isComplete()) {
             std::cout << "No active innings!\n";
             return;
         }
-        
+        if (currentInning_->hasOverInProgress()) {
+            std::cout << "The current over is not finished!\n";
+            return;
+        }
+        if (!bowler || !currentInning_->getBowlingTeam()->getPlayerById(bowler->getPlayerId())) {
+            std::cout << "The bowler must be in the fielding team!\n";
+            return;
+        }
+        const auto& overs = currentInning_->getOvers();
+        if (!overs.empty() && overs.back()->getBowler() == bowler) {
+            std::cout << bowler->getName() << " cannot bowl two overs in a row!\n";
+            return;
+        }
+        if (bowler->getBowlingScoreCard()->getOversBowled() >= matchType_->getMaxOversPerBowler()) {
+            std::cout << bowler->getName() << " has bowled the maximum overs!\n";
+            return;
+        }
+
         currentInning_->setCurrentBowler(bowler);
         std::cout << "\n--- New Over: " << bowler->getName() << " bowling ---\n\n";
     }
@@ -227,6 +279,7 @@ public:
      */
     void endInning() {
         if (currentInning_) {
+            currentInning_->markComplete();
             std::cout << "\n" << currentInning_->getFullScoreBoard() << "\n";
         }
     }
@@ -235,7 +288,7 @@ public:
      * @brief Determine match result
      */
     void determineResult() {
-        if (innings_.size() < 2) {
+        if (innings_.size() < 2 || !innings_[1]->isComplete()) {
             result_ = MatchResult::IN_PROGRESS;
             return;
         }

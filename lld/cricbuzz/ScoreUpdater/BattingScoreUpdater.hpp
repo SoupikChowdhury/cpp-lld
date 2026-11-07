@@ -44,8 +44,9 @@ public:
         // Handle wicket
         if (ballDetails->isWicket()) {
             auto wicket = ballDetails->getWicket();
-            if (wicket && wicket->getBatsmanOut() == striker) {
-                battingCard->setOut(
+            // Usually the striker, but the non-striker can be run out
+            if (wicket && wicket->getBatsmanOut()) {
+                wicket->getBatsmanOut()->getBattingScoreCard()->setOut(
                     wicketTypeToString(wicket->getWicketType()),
                     wicket->getBowler() ? wicket->getBowler()->getName() : ""
                 );

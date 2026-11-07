@@ -16,6 +16,7 @@ private:
     std::shared_ptr<Player> bowler_;
     std::vector<std::shared_ptr<BallDetails>> balls_;
     int runsInOver_ = 0;
+    int runsOffBowler_ = 0;  // Excludes byes and leg byes
     int wicketsInOver_ = 0;
     bool isMaiden_ = false;
     bool isComplete_ = false;
@@ -52,14 +53,17 @@ public:
     void addBall(std::shared_ptr<BallDetails> ball) {
         balls_.push_back(ball);
         runsInOver_ += ball->getRunsScored();
-        
+        if (ball->getRunType() != RunType::BYE && ball->getRunType() != RunType::LEG_BYE) {
+            runsOffBowler_ += ball->getRunsScored();
+        }
+
         if (ball->isWicket()) {
             wicketsInOver_++;
         }
         
         if (getLegalBallCount() >= 6) {
             isComplete_ = true;
-            isMaiden_ = (runsInOver_ == 0 && wicketsInOver_ == 0);
+            isMaiden_ = (runsOffBowler_ == 0);  // A wicket doesn't stop it being a maiden
         }
     }
 

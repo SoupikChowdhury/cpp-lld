@@ -44,10 +44,10 @@ public:
             bowlingCard->incrementBalls();
         }
         
-        // Handle wicket (excluding run outs which don't credit the bowler)
+        // Handle wicket (excluding dismissals like run outs which don't credit the bowler)
         if (ballDetails->isWicket()) {
             auto wicket = ballDetails->getWicket();
-            if (wicket && wicket->getWicketType() != WicketType::RUN_OUT) {
+            if (wicket && creditsBowler(wicket->getWicketType())) {
                 bowlingCard->addWicket();
             }
         }

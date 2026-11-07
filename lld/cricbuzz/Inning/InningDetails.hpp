@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <vector>
 #include <memory>
 #include <string>
@@ -37,6 +38,7 @@ private:
     
     int maxOvers_;
     bool isComplete_ = false;
+    bool freeHitNext_ = false;
     int targetScore_ = 0;  // For second innings
 
 public:
@@ -66,11 +68,14 @@ public:
     std::shared_ptr<Player> getNonStriker() const { return nonStriker_; }
     std::shared_ptr<Player> getCurrentBowler() const { return currentBowler_; }
     bool isComplete() const { return isComplete_; }
+    bool isFreeHitNext() const { return freeHitNext_; }
+    bool hasOverInProgress() const { return currentOver_ != nullptr; }
     int getMaxOvers() const { return maxOvers_; }
     const std::vector<std::shared_ptr<OverDetails>>& getOvers() const { return overs_; }
 
     // Setters
     void setTargetScore(int target) { targetScore_ = target; }
+    void markComplete() { isComplete_ = true; }
     void setCurrentBowler(std::shared_ptr<Player> bowler) {
         currentBowler_ = bowler;
         currentOver_ = std::make_shared<OverDetails>(overs_.size(), bowler);
@@ -98,24 +103,44 @@ public:
     }
 
     /**
+     * @brief Add a delivery to the current over
+     */
+    void recordBall(std::shared_ptr<BallDetails> ball) {
+        currentOver_->addBall(ball);
+
+        // After a no-ball the next delivery is a free hit, until a legal ball is bowled
+        if (ball->getBallType() == BallType::NO_BALL) {
+            freeHitNext_ = true;
+        } else if (ball->isLegalDelivery()) {
+            freeHitNext_ = false;
+        }
+    }
+
+    /**
      * @brief Add runs to the innings
      */
     void addRuns(int runs, RunType runType, bool isExtra = false) {
         totalRuns_ += runs;
         
         if (isExtra) {
-            totalExtras_ += runs;
+            // On a no-ball only the penalty is an extra: the rest came off the bat
+            int extras = (runType == RunType::NO_BALL) ? std::min(runs, 1) : runs;
+            totalExtras_ += extras;
             switch (runType) {
-                case RunType::WIDE: wides_ += runs; break;
-                case RunType::NO_BALL: noBalls_ += runs; break;
-                case RunType::BYE: byes_ += runs; break;
-                case RunType::LEG_BYE: legByes_ += runs; break;
+                case RunType::WIDE: wides_ += extras; break;
+                case RunType::NO_BALL: noBalls_ += extras; break;
+                case RunType::BYE: byes_ += extras; break;
+                case RunType::LEG_BYE: legByes_ += extras; break;
                 default: break;
             }
         }
         
-        // Rotate strike for odd runs
-        if (runs % 2 == 1) {
+        // Rotate strike for odd runs actually run: the penalty on a wide or no-ball isn't run
+        int runsRun = runs;
+        if (runType == RunType::WIDE || runType == RunType::NO_BALL) {
+            runsRun = std::max(0, runs - 1);
+        }
+        if (runsRun % 2 == 1) {
             rotateStrike();
         }
         
@@ -132,9 +157,14 @@ public:
         wickets_.push_back(wicket);
         totalWickets_++;
         
-        // Bring in next batsman
+        // Bring in next batsman, in place of whichever batsman is out
         if (nextBatsmanIndex_ < static_cast<int>(battingTeam_->getTeamSize())) {
-            striker_ = battingTeam_->getPlayer(nextBatsmanIndex_);
+            auto nextBatsman = battingTeam_->getPlayer(nextBatsmanIndex_);
+            if (wicket->getBatsmanOut() == nonStriker_) {
+                nonStriker_ = nextBatsman;
+            } else {
+                striker_ = nextBatsman;
+            }
             nextBatsmanIndex_++;
         } else {
             isComplete_ = true;  // All out
@@ -189,7 +219,7 @@ public:
         str += " (" + getOversString() + " ov)";
         str += " | RR: " + std::to_string(getRunRate()).substr(0, 4);
         
-        if (targetScore_ > 0) {
+        if (targetScore_ > 0 && !isComplete_) {
             str += " | Need " + std::to_string(targetScore_ - totalRuns_) + " runs";
             str += " | RRR: " + std::to_string(getRequiredRunRate()).substr(0, 4);
         }
@@ -214,7 +244,15 @@ public:
         str += " (" + getOversString() + " overs)\n\n";
         
         str += bowlingTeam_->getBowlingFigures();
-        
+
+        str += "\n=== Overs ===\n";
+        for (const auto& over : overs_) {
+            str += over->toString() + "\n";
+        }
+        if (currentOver_) {
+            str += currentOver_->toString() + "\n";
+        }
+
         return str;
     }
 };

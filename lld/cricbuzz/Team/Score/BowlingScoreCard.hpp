@@ -51,13 +51,15 @@ public:
     void addWicket() { wicketsTaken_++; }
     
     void addNoBall() { 
-        noBalls_++; 
+        noBalls_++;
         runsConceded_++;
+        currentOverRuns_++;
     }
     
     void addWide() { 
-        wides_++; 
+        wides_++;
         runsConceded_++;
+        currentOverRuns_++;
     }
 
     /**

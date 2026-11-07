@@ -46,8 +46,6 @@ public:
     std::string getOverString() const {
         return std::to_string(overNumber_) + "." + std::to_string(ballNumber_);
     }
-
-    std::string toString() const;  // Defined after Player is complete
 };
 
 } // namespace Cricbuzz

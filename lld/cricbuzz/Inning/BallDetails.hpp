@@ -10,6 +10,27 @@
 namespace Cricbuzz {
 
 /**
+ * @brief Check whether a batsman can be out this way on this delivery
+ */
+inline bool canBeOutOn(BallType ballType, WicketType wicketType) {
+    bool alwaysPossible = wicketType == WicketType::RUN_OUT ||
+                          wicketType == WicketType::HANDLED_BALL ||
+                          wicketType == WicketType::OBSTRUCTING_FIELD;
+    switch (ballType) {
+        case BallType::NO_BALL:
+        case BallType::FREE_HIT:
+            return alwaysPossible;
+        case BallType::WIDE:
+            return alwaysPossible || wicketType == WicketType::STUMPED ||
+                   wicketType == WicketType::HIT_WICKET;
+        case BallType::DEAD_BALL:
+            return false;
+        default:
+            return true;
+    }
+}
+
+/**
  * @brief Class representing details of a single ball delivery
  */
 class BallDetails {

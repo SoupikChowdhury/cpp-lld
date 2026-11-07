@@ -59,6 +59,11 @@ public:
     virtual int getDRSReviewsPerInnings() const = 0;
 
     /**
+     * @brief Get maximum overs a bowler can bowl
+     */
+    virtual int getMaxOversPerBowler() const = 0;
+
+    /**
      * @brief Check if follow-on is applicable
      */
     virtual bool isFollowOnApplicable() const { return false; }

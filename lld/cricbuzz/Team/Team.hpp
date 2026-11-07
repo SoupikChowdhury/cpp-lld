@@ -18,7 +18,6 @@ private:
     std::vector<std::shared_ptr<Player>> players_;
     std::shared_ptr<Player> captain_;
     std::shared_ptr<Player> wicketKeeper_;
-    int battingOrder_[11] = {0};
 
 public:
     Team(const std::string& teamId, const std::string& name, const std::string& country)

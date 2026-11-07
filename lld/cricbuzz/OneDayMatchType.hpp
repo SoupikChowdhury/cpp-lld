@@ -54,7 +54,7 @@ public:
     /**
      * @brief Get maximum overs a bowler can bowl
      */
-    int getMaxOversPerBowler() const {
+    int getMaxOversPerBowler() const override {
         return 10;
     }
 

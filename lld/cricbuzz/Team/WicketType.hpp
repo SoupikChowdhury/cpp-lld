@@ -43,4 +43,22 @@ inline std::string wicketTypeToString(WicketType type) {
     }
 }
 
+/**
+ * @brief Check whether this dismissal counts as a wicket for the bowler
+ */
+inline bool creditsBowler(WicketType type) {
+    switch (type) {
+        case WicketType::BOWLED:
+        case WicketType::CAUGHT:
+        case WicketType::CAUGHT_BEHIND:
+        case WicketType::LBW:
+        case WicketType::STUMPED:
+        case WicketType::HIT_WICKET:
+        case WicketType::CAUGHT_AND_BOWLED:
+            return true;
+        default:
+            return false;
+    }
+}
+
 } // namespace Cricbuzz
