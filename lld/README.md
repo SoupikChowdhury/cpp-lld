@@ -102,9 +102,3 @@ g++ -std=c++17 main.cpp VendingMachine.cpp -o vending_machine        # vending_m
 On Linux, add `-pthread` for code that starts threads.
 
 [`README_GUIDE.md`](./README_GUIDE.md) explains how these READMEs are written, for anyone adding a new one.
-
-## License
-
-MIT License - Feel free to use for learning and interviews!
-
-Educational purposes only. Use for interview preparation.
