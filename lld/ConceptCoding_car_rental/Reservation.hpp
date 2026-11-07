@@ -4,6 +4,7 @@
 #include <ctime>
 #include <memory>
 #include <iostream>
+#include <stdexcept>
 #include "Product/Vehicle.hpp"
 #include "User.hpp"
 #include "Location.hpp"
@@ -25,6 +26,13 @@ private:
     ReservationStatus status;
     time_t createdAt;
     int duration;  // In units based on reservation type
+
+    void requireStatus(bool allowed, const char* action) const {
+        if (!allowed) {
+            throw std::runtime_error(std::string("Cannot ") + action + " a reservation that is " +
+                                     reservationStatusToString(status));
+        }
+    }
 
 public:
     Reservation(const std::string& id, std::shared_ptr<User> user,
@@ -71,23 +79,28 @@ public:
     ReservationStatus getStatus() const { return status; }
     int getDuration() const { return duration; }
 
-    // Status updates
-    void confirm() { 
+    // Status updates: each one only from the states that allow it, so a stale reservation
+    // can never change the status of a vehicle that has since been reserved by someone else
+    void confirm() {
+        requireStatus(status == ReservationStatus::PENDING, "confirm");
         status = ReservationStatus::CONFIRMED;
         vehicle->setStatus(VehicleStatus::RESERVED);
     }
-    
-    void activate() { 
+
+    void activate() {
+        requireStatus(status == ReservationStatus::CONFIRMED, "activate");
         status = ReservationStatus::ACTIVE;
         vehicle->setStatus(VehicleStatus::RENTED);
     }
-    
-    void complete() { 
+
+    void complete() {
+        requireStatus(status == ReservationStatus::ACTIVE, "complete");
         status = ReservationStatus::COMPLETED;
         vehicle->setStatus(VehicleStatus::AVAILABLE);
     }
-    
-    void cancel() { 
+
+    void cancel() {
+        requireStatus(status == ReservationStatus::PENDING || status == ReservationStatus::CONFIRMED, "cancel");
         status = ReservationStatus::CANCELLED;
         vehicle->setStatus(VehicleStatus::AVAILABLE);
     }

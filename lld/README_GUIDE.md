@@ -121,7 +121,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | vending_machine | README.md | done |
 | null_object | INTERVIEW_GUIDE.md | todo |
 | ConceptCoding_atm | README.md (lighter: differences + own gaps) | done |
-| ConceptCoding_car_rental | INTERVIEW_GUIDE.md, UML_DIAGRAM.md | todo |
+| ConceptCoding_car_rental | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_hashmap | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_snakes_and_ladder | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_splitwise | README.md (lighter: differences + own gaps) | done |

@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include <iostream>
+#include <mutex>
 #include "Store.hpp"
 #include "User.hpp"
 #include "Bill.hpp"
@@ -26,8 +27,9 @@ private:
     int reservationCounter;
     int billCounter;
     int paymentCounter;
+    std::mutex reservationMutex;  // makes "is it available?" + "reserve it" one step
 
-    VehicleRentalSystem() 
+    VehicleRentalSystem()
         : systemName("Vehicle Rental System"), 
           reservationCounter(0), billCounter(0), paymentCounter(0) {}
 
@@ -94,9 +96,10 @@ public:
         int duration,
         ReservationType type
     ) {
+        std::lock_guard<std::mutex> lock(reservationMutex);
         auto store = getStore(storeId);
         auto user = getUser(userId);
-        
+
         if (!store || !user) {
             std::cout << "Store or User not found!" << std::endl;
             return nullptr;
@@ -156,6 +159,9 @@ public:
         auto reservation = store->getReservation(reservationId);
         if (!reservation) return;
 
+        // Complete reservation first: it throws unless ACTIVE, before km or a bill are recorded
+        reservation->complete();
+
         // Update vehicle
         auto vehicle = reservation->getVehicle();
         vehicle->addKmDriven(kmDriven);
@@ -171,8 +177,6 @@ public:
 
         bill->displayBill();
 
-        // Complete reservation
-        reservation->complete();
         std::cout << "Rental completed for reservation: " << reservationId << std::endl;
     }
 
