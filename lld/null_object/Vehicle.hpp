@@ -45,7 +45,8 @@ public:
 
     /**
      * @brief Check if vehicle is null
-     * This is the key method for Null Object Pattern
+     * For the rare caller that must know, like counting real vehicles.
+     * The pattern's point is that most callers never need to ask.
      */
     virtual bool isNull() const = 0;
 

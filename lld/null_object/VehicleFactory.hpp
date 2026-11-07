@@ -1,6 +1,8 @@
 #pragma once
 
+#include <cctype>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <algorithm>
@@ -22,6 +24,7 @@ class VehicleFactory {
 private:
     // Cache of created vehicles (optional, for demo)
     std::unordered_map<std::string, std::shared_ptr<Vehicle>> vehicleCache_;
+    std::mutex cacheMutex_;
 
 public:
     VehicleFactory() = default;
@@ -68,6 +71,7 @@ public:
      */
     std::shared_ptr<Vehicle> getOrCreate(const std::string& id,
                                           const std::string& type) {
+        std::lock_guard<std::mutex> lock(cacheMutex_);
         auto it = vehicleCache_.find(id);
         if (it != vehicleCache_.end()) {
             return it->second;
@@ -85,6 +89,7 @@ public:
      * Returns NullVehicle if not found (not nullptr!)
      */
     std::shared_ptr<Vehicle> getVehicle(const std::string& id) {
+        std::lock_guard<std::mutex> lock(cacheMutex_);
         auto it = vehicleCache_.find(id);
         if (it != vehicleCache_.end()) {
             return it->second;
@@ -98,6 +103,7 @@ public:
      * This is shown for comparison purposes only
      */
     Vehicle* getVehicleTraditional(const std::string& id) {
+        std::lock_guard<std::mutex> lock(cacheMutex_);
         auto it = vehicleCache_.find(id);
         if (it != vehicleCache_.end()) {
             return it->second.get();
@@ -108,7 +114,9 @@ public:
 private:
     std::string toLower(const std::string& str) {
         std::string result = str;
-        std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+        // unsigned char: tolower is undefined for the negative values a plain char can hold
+        std::transform(result.begin(), result.end(), result.begin(),
+                       [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
         return result;
     }
 };

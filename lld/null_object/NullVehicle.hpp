@@ -30,13 +30,12 @@ public:
     }
 
     void start() const override {
-        // Do nothing - silent operation
-        // Could also log: "No vehicle to start"
+        // Nothing to start; the message is here so the demo shows this ran
         std::cout << "[NullVehicle] No vehicle available to start.\n";
     }
 
     void stop() const override {
-        // Do nothing - silent operation
+        // Nothing to stop; the message is here so the demo shows this ran
         std::cout << "[NullVehicle] No vehicle available to stop.\n";
     }
 

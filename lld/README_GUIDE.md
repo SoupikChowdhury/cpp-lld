@@ -119,7 +119,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | order_management_system | README.md | done |
 | tic_tac_toe | README.md | done |
 | vending_machine | README.md | done |
-| null_object | INTERVIEW_GUIDE.md | todo |
+| null_object | README.md (lightest) | done |
 | ConceptCoding_atm | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_car_rental | README.md (lighter: differences + own gaps) | done |
 | ConceptCoding_hashmap | README.md (lighter: differences + own gaps) | done |
