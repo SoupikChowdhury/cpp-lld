@@ -127,7 +127,7 @@ Status: `done` = rewritten in this format, `todo` = not yet.
 | ConceptCoding_splitwise | README.md (lighter: differences + own gaps) | done |
 | design_patterns | per-pattern README.md (lightest) | done |
 | smart_pointers | README.md | done |
-| string | none | todo |
+| string | README.md | done |
 
 ### Plan for folders that have `INTERVIEW_GUIDE.md`
 

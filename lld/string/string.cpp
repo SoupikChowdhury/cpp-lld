@@ -9,6 +9,8 @@ class String
         String():res(new char[1]{'\0'}), len(0) {} //default constructor
         String(const char *ch) //parameterized constructor
         {
+            if(!ch) //strlen would crash on a null pointer: treat it as empty
+                ch = "";
             len = strlen(ch);
             res = new char[len + 1];
             strcpy(res, ch);
@@ -91,8 +93,8 @@ ostream& operator<<(ostream &out, const String &str) //overload output(<<) opera
 istream& operator>>(istream& in,String &str)
 {
     string word;
-    in >> word;
-    str = String(word.c_str());
+    if(in >> word) //a failed read must not wipe str
+        str = String(word.c_str());
     return in;
 }
 
@@ -104,8 +106,11 @@ int main() {
     int len = str2.length();//length method
     cout<<str2<<" "<<len<<endl;//overload output(<<) operator
     cin>>str1;//overload input(>>) operator
+    cout<<str1<<" "<<str1.length()<<endl;
     String str6 = std::move(str2); //move constructor
+    cout<<str6<<", moved-from length: "<<str2.length()<<endl;
     str6 = move(str3); //move assignment operator
+    cout<<str6<<", moved-from length: "<<str3.length()<<endl;
 
     return 0;
 }
