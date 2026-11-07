@@ -15,7 +15,7 @@ public:
                 if (a->getDoctor()->getRating() != b->getDoctor()->getRating()) {
                     return a->getDoctor()->getRating() > b->getDoctor()->getRating();
                 }
-                return a->getSlot().getStartTime() < b->getSlot().getStartTime();
+                return startsFirst(a, b);
             });
         
         return ranked;

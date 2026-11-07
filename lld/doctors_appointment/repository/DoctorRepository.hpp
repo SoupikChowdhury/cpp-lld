@@ -18,7 +18,7 @@ public:
         doctors[doctor->getDoctorId()] = doctor;
     }
 
-    Doctor* getDoctor(const std::string& doctorId) {
+    Doctor* getDoctor(const std::string& doctorId) const {
         std::lock_guard<std::mutex> lock(mutex_);
         auto it = doctors.find(doctorId);
         return (it != doctors.end()) ? it->second : nullptr;

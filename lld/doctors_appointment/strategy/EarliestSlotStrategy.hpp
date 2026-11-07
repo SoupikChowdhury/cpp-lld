@@ -11,7 +11,7 @@ public:
         
         std::sort(ranked.begin(), ranked.end(), 
             [](Appointment* a, Appointment* b) {
-                return a->getSlot().getStartTime() < b->getSlot().getStartTime();
+                return startsFirst(a, b);
             });
         
         return ranked;

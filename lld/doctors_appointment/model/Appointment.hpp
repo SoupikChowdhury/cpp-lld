@@ -42,18 +42,25 @@ public:
         return false;
     }
 
-    void cancel() {
-        status.store(AppointmentStatus::CANCELLED);
-        patient = nullptr;
+    // Only a booked appointment can be cancelled or completed
+    bool cancel() {
+        AppointmentStatus expected = AppointmentStatus::BOOKED;
+        if (status.compare_exchange_strong(expected, AppointmentStatus::CANCELLED)) {
+            patient = nullptr;
+            return true;
+        }
+        return false;
     }
 
-    void complete() {
-        status.store(AppointmentStatus::COMPLETED);
+    bool complete() {
+        AppointmentStatus expected = AppointmentStatus::BOOKED;
+        return status.compare_exchange_strong(expected, AppointmentStatus::COMPLETED);
     }
 
-    void makeAvailable() {
-        status.store(AppointmentStatus::AVAILABLE);
-        patient = nullptr;
+    // Only a cancelled slot can be reopened
+    bool makeAvailable() {
+        AppointmentStatus expected = AppointmentStatus::CANCELLED;
+        return status.compare_exchange_strong(expected, AppointmentStatus::AVAILABLE);
     }
 };
 

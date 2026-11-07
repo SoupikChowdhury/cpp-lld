@@ -1,6 +1,7 @@
 #ifndef DOCTOR_HPP
 #define DOCTOR_HPP
 
+#include <algorithm>
 #include <string>
 #include "../enums/Specialty.hpp"
 
@@ -16,7 +17,7 @@ public:
     Doctor(const std::string& doctorId, const std::string& name,
            Specialty specialty, double rating, double consultationFee)
         : doctorId(doctorId), name(name), specialty(specialty),
-          rating(rating), consultationFee(consultationFee) {}
+          rating(std::min(5.0, std::max(1.0, rating))), consultationFee(consultationFee) {}
 
     // Getters
     std::string getDoctorId() const { return doctorId; }

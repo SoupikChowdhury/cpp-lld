@@ -25,10 +25,10 @@ int main() {
     AppointmentService service;
 
     // Create doctors
-    Doctor* drSmith = new Doctor("D001", "Dr. Smith", Specialty::CARDIOLOGY, 4.5, 150.0);
-    Doctor* drJones = new Doctor("D002", "Dr. Jones", Specialty::CARDIOLOGY, 4.8, 200.0);
-    Doctor* drWilson = new Doctor("D003", "Dr. Wilson", Specialty::DERMATOLOGY, 4.2, 100.0);
-    Doctor* drBrown = new Doctor("D004", "Dr. Brown", Specialty::GENERAL, 4.0, 75.0);
+    Doctor* drSmith = new Doctor("D001", "Smith", Specialty::CARDIOLOGY, 4.5, 150.0);
+    Doctor* drJones = new Doctor("D002", "Jones", Specialty::CARDIOLOGY, 4.8, 200.0);
+    Doctor* drWilson = new Doctor("D003", "Wilson", Specialty::DERMATOLOGY, 4.2, 100.0);
+    Doctor* drBrown = new Doctor("D004", "Brown", Specialty::GENERAL, 4.0, 75.0);
 
     service.addDoctor(drSmith);
     service.addDoctor(drJones);
@@ -49,9 +49,8 @@ int main() {
     service.addSlot(drSmith, createSlot(2, 30));  // 2 hours from now
     service.addSlot(drSmith, createSlot(3, 30));
 
-    // Dr. Jones's slots
+    // Dr. Jones's slot
     service.addSlot(drJones, createSlot(1, 30));
-    service.addSlot(drJones, createSlot(4, 30));
 
     // Dr. Wilson's slots
     service.addSlot(drWilson, createSlot(2, 30));

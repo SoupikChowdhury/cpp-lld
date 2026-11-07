@@ -15,7 +15,7 @@ public:
                 if (a->getDoctor()->getConsultationFee() != b->getDoctor()->getConsultationFee()) {
                     return a->getDoctor()->getConsultationFee() < b->getDoctor()->getConsultationFee();
                 }
-                return a->getSlot().getStartTime() < b->getSlot().getStartTime();
+                return startsFirst(a, b);
             });
         
         return ranked;
